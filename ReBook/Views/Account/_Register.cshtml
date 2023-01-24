@@ -1,0 +1,62 @@
+﻿@model RegisterVM
+
+<form id="registerForm"
+      data-ajax="true"
+      data-ajax-method="post"
+      data-ajax-url="/Account/Register"
+      data-ajax-update="#main-modal-content"
+      data-ajax-error="onError"
+      autocomplete="off"
+      enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    @if (@Model.Error != null)
+    {
+        <div class="form-group row pl-2 pr-2">
+            <label asp-for="Error" class=" control-label pl-2 text-danger">@Model.Error</label>
+        </div>
+    }
+    <div class="row pl-3 pr-2" style="display:flex;">
+        <div class="col-9">
+            <div class="d-none">
+                <div class="custom-file">
+                    <input id="input-avatar" type="file" class="custom-file-input" onchange="uploadAvatar(event, this, '', false);">
+                    <label asp-for="Avatar" class="custom-file-label" for="customFile">Choose Avatar</label>
+                </div>
+                <span asp-validation-for="Avatar" class="text-danger"></span>
+            </div>
+            <div class="form-group row">
+                <input asp-for="Pseudo" class="form-control" placeholder="Pseudo" />
+                <span asp-validation-for="Pseudo" class="text-danger"></span>
+            </div>
+            <div class="form-group row">
+                <input asp-for="Email" class="form-control" placeholder="Email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-3 p-0">
+            <div class="text-center w-100" style="position:relative">
+                <div id="avatar-loader-container" class="img-thumbnail thumb-user-create">
+                    <div class="img-loader"></div>
+                </div>
+                <img id="form-img-preview" src=@Model.Avatar class="img-thumbnail thumb-user-create" onclick="$('#input-avatar').trigger('click');" />
+            </div>
+            <input asp-for="Avatar" type="hidden">
+        </div>
+    </div>
+    <div class="form-group row pl-3 pr-3">
+        <input asp-for="Password" class="form-control" placeholder="Password" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+    <div class="form-group row pl-3 pr-3">
+        <input asp-for="ConfirmPassword" class="form-control" placeholder="Confirm password" />
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    </div>
+    <div class="form-group row pl-3 pr-3">
+        <div class="col p-1">
+            <input class="btn btn-block btn-success" type="submit" value="Sign Up" />
+        </div>
+        <div class="col p-1">
+            <a href="#" class="btn btn-block btn-info" onclick="$('#pills-home-tab').trigger('click'); return false;">Sign In</i></a>
+        </div>
+    </div>
+</form>

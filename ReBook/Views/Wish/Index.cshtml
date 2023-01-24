@@ -1,0 +1,98 @@
+﻿@model EditionIndexVM
+@Html.Raw(TempData["msg"])
+
+@if (Model.Editions.Count > 0)
+{
+    <div class="main-search-container sticky-top no-clear">
+        <form data-ajax="true"
+              data-ajax-method="get"
+              data-ajax-begin="onFindSimple"
+              data-ajax-success="replaceAndReadMore"
+              data-ajax-error="onError"
+              autocomplete="off"
+              asp-controller="Home"
+              asp-action="_IndexPartial"
+              style="width:100%;">
+            <input asp-for="Query.CurrentController" type="hidden" />
+            <div class="w-100">
+                <div class="input-group">
+                    <div class="input-group pr-2">
+
+                        <input id="advanced-search-input" asp-for="Query.QuerySearch" type="text" class="form-control main-input-search no-label" style="border-right:none;" placeholder="search in your wishes list..." />
+                        <a id="clear-advanced-search-button"
+                           href=""
+                           data-ajax="true"
+                           data-ajax-url="/Home/_ClearSearch?repo=@Model.Query.Repo&&control=@Model.Query.CurrentController"
+                           data-ajax-method="get"
+                           data-ajax-begin="onClearAdvancedSearch"
+                           data-ajax-success="replaceAndReadMore"
+                           data-ajax-error="onError"
+                           class="btn btn-outline-danger"
+                           style=" display: none; border-radius: 0px; border:1px solid #ced4da; border-left:none">
+                            &nbsp;<i class="fas fa-search-minus"></i> &nbsp;
+                        </a>
+                        <div class="input-group-append">
+                            <button id="main-search-button" type="submit" class="btn btn-secondary">&nbsp;<i class="fas fa-search"></i>&nbsp;</button>
+                            <a href=""
+                               data-toggle="modal"
+                               data-target="#main-modal"
+                               class="btn btn-info"
+                               style="border-radius: 0 1em 1em 0;"
+                               onclick="openAdvancedSearch(); return false;">
+                                &nbsp;<i class="fas fa-search-plus"></i>&nbsp;
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <input id="sRepo" asp-for="Query.Repo" type="hidden" />
+                <input id="sRepo" asp-for="Query.SearchContext" type="hidden" value="simple" />
+            </div>
+            <h6 class="w-100 text-right p-1 pr-4" style="display: block;">
+                <a href=""
+                   data-ajax="true"
+                   data-ajax-url="/Edition/_ISBN?currentController=@Model.Query.CurrentController"
+                   data-ajax-method="get"
+                   data-ajax-begin="onBegin"
+                   data-ajax-success="replaceAndCallback"
+                   data-ajax-error="onError"
+                   data-toggle="modal"
+                   data-target="#main-modal">
+                    <span style="padding-left:0.5em">Trade a book</span>
+                </a>
+            </h6>
+        </form>
+    </div>
+
+    <div class="container p-3">
+        <br /><br />
+        <div id="containerIndexEditionPartial">
+            <div id="tbody-edition-index" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
+                @if (Model.Editions.Count > 0)
+                {
+                    <partial name="../Home/_IndexPartial" model="Model" />
+                }
+            </div>
+        </div>
+        @if (Model.Editions.Count == Model.Query.PageSize)
+        {
+            <div id="containerReadMore" class="container p-3">
+                <partial name="../Home/_ReadMore" model="Model.Query" />
+            </div>
+        }
+
+        <div id="containerSearchEditionForm" class="d-none">
+            <partial name="../Home/_AdvancedSearch" model="Model.Query" />
+        </div>
+    </div>
+
+
+    @section Scripts{
+
+        <script src="~/js/edition.js"></script>
+    }
+}
+else
+{
+    <div class="text-secondary" style="width:100%; height:90vh; display:flex; justify-content:center; align-items:center;"><h1>Your wish list is empty.</h1></div>
+}
+

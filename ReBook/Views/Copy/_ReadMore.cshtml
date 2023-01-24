@@ -1,0 +1,28 @@
+﻿@model QueryVM
+<form method="Get"
+      data-ajax="true"
+      data-ajax-method="get"
+      data-ajax-begin="readMoreLoader(this);"
+      data-ajax-success="appendReadMore"
+      data-ajax-error="onError"
+      asp-action="_IndexPartial"
+      asp-controller="Copy">
+    <input id="sUserId" asp-for="OwnerId" type="hidden" />
+    <input id="sCurrentPage" asp-for="CurrentPage" type="hidden" />
+    <input id="sPageSize" asp-for="PageSize" type="hidden" />
+    <input id="sFound" asp-for="Found" type="hidden" />
+    <input id="sSearchContext" asp-for="SearchContext" type="hidden" />
+    <input id="sISBN" asp-for="ISBN" type="hidden" />
+    <input id="sTitle" asp-for="Title" type="hidden" />
+    <input id="sAuthor" asp-for="Author" type="hidden" />
+    <input id="sEditor" asp-for="Editor" type="hidden" />
+    <input id="sTag" asp-for="Tag" type="hidden" />
+    <input id="sRepo" asp-for="CurrentController" type="hidden" />
+    <input id="sQuerySearch" asp-for="QuerySearch" type="hidden" />
+    <div class=" bt-2 text-center">
+        <button id="read-more-btn" type="submit" class="btn btn-success btn-readmore"><i class="fas fa-plus"></i></button>
+    </div>
+</form>
+
+
+

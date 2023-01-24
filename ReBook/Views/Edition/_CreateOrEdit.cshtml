@@ -1,0 +1,164 @@
+﻿@model EditionVM
+
+@{
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<div class="modal-header">
+    <h5 class="modal-title text-info">@Model.PageTitle</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+<div class="modal-body">
+    <form id="form"
+          method="post"
+          data-ajax="true"
+          data-ajax-method="post"
+          data-ajax-begin="onBegin"
+          data-ajax-url="Edition/_CreateOrEditPost"
+          data-ajax-update="#main-modal-content"
+          data-ajax-success="$('#submit-advanced-search').click()"
+          data-ajax-error="onError"
+          autocomplete="off"
+          enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <div class="pt-2 pl-3 pr-3">
+            <input asp-for="Edition.Id" type="hidden" />
+            <input asp-for="Repository" type="hidden" />
+            @if (@Model.Error != null)
+            {
+                <div class="form-group row pl-2 pr-2">
+                    <label asp-for="Error" class=" control-label pl-2 text-danger">@Model.Error</label>
+                </div>
+            }
+            <div class="row p-2">
+                <div class="col-9">
+                    <div class="form-group row ">
+
+                        <div class="input-group pr-2">
+                            <label asp-for="Edition.ISBN13" class="input-group-text"></label>
+                            <input asp-for="Edition.ISBN13" class="form-control" value="@Model.Edition.ISBN13" readonly />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="input-group pr-2">
+                            <label asp-for="Edition.Editor" class="input-group-text"></label>
+                            <div id="autocomplete-editor" class="form-control">
+                                <input asp-for="Edition.Editor" class="autocomplete-input w-100" placeholder="Editor (Required)" onkeydown="autocompMe(event, this);" />
+                            </div>
+                        </div>
+                        <span asp-va lidation-for="Edition.Editor" class="text-danger"></span>
+                    </div>
+                    <div class="form-group row">
+                        <div class="input-group pr-2">
+                            <label asp-for="Edition.Book.Title" class="input-group-text"></label>
+                            <div id="autocomplete-title" class="form-control">
+                                <input asp-for="Edition.Book.Title" class="autocomplete-input w-100" placeholder="Title (Required)" onkeydown="autocompMe(event, this);" />
+                            </div>
+                        </div>
+                        <span asp-va lidation-for="Edition.Editor" class="text-danger"></span>
+                    </div>
+                    <div class="d-none">
+                        <div class="custom-file">
+                            <input id="input-cover" type="file" class="custom-file-input" onchange="uploadEditionCover(event, this);">
+                            <label asp-for="Edition.Cover" class="custom-file-label" for="customFile">Choose Cover</label>
+                        </div>
+                        <span asp-validation-for="Edition.Cover" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-3 p-0">
+                    <div class="text-center w-100" style="position:relative">
+                        <div id="img-loader-container" class="img-thumbnail thumb-edition-create">
+                            <div class="img-loader"></div>
+                        </div>
+                        <img id="form-img-preview" src=@Model.Edition.Cover class="img-thumbnail thumb-edition-create" onclick="$('#input-cover').trigger('click');" />
+                    </div>
+                    <input asp-for="Edition.Cover" type="hidden">
+                </div>
+            </div>
+            <div id="authorsListContainer">
+                <partial name="_AddAuthorPartial" , model="Model" />
+            </div>
+            <div class="row pl-2 pr-2">
+                <div class="col">
+                    <div class="form-group row pr-2">
+                        <div class="input-group">
+                            <label asp-for="Edition.Language" class="input-group-text"></label>
+                            <div id="autocomplete-lang" class="form-control">
+                                <input asp-for="Edition.Language" class="autocomplete-input w-100" placeholder="language (Required)" onkeydown="autocompMe(event, this);" />
+                            </div>
+                        </div>
+                        <span asp-validation-for="Edition.Language" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group row pl-2">
+                        <div class="input-group">
+                            <label asp-for="Edition.pageCount" class="input-group-text"></label>
+                            <input asp-for="Edition.pageCount" class="form-control" placeholder="Pages Count (Optional)" />
+                        </div>
+                        <span asp-validation-for="Edition.pageCount" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row pl-2 pr-2">
+                <div class="input-group">
+                    <label asp-for="Edition.publishedDate" class="input-group-text"></label>
+                    <input asp-for="Edition.publishedDate" id="publishedDate" class="form-control" placeholder="Published Date (Optional)" />
+                </div>
+                <span asp-validation-for="Edition.publishedDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group row pl-2 pr-2">
+                <label asp-for="Edition.Description" class="control-label"></label>
+                <textarea asp-for="Edition.Description" class="form-control" rows="5" placeholder="Description (Optional)"></textarea>
+                <span asp-validation-for="Edition.Description" class="text-danger"></span>
+            </div>
+            <div id="tagsListContainer">
+                <partial name="_AddTagPartial" , model="Model" />
+            </div>
+            <div class="form-group row pl-2 pr-2">
+                <div class="col">
+                    @if (@Model.Edition.Id == 0)
+                    {
+                        <input class="btn btn-info w-100" type="submit" value="Add" />
+                    }
+                    else
+                    {
+                        <input class="btn btn-info w-100" type="submit" value="Save" />
+                    }
+                </div>
+                <div class="col">
+                    @if (@Model.Edition.Id != 0)
+                    {
+                        <a href=""
+                           data-ajax="true"
+                           data-ajax-url="/Edition/_Details?&isbn=@Model.Edition.ISBN13&&repo=@Model.Repository"
+                           data-ajax-method="get"
+                           data-ajax-success="replaceAndCallback"
+                           data-ajax-error="onError"
+                           class="btn btn-success w-100">
+                            <i class="fas fa-sign-out-alt"></i> Cancel
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="#"
+                           data-dismiss="modal"
+                           class="btn btn-success w-100">
+                            <i class="fas fa-sign-out-alt"></i> Cancel
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-4">
+            @* Keep this empty *@
+        </div>
+    </form>
+</div>
+
+
+
+

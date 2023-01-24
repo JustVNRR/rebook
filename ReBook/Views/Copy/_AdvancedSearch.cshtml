@@ -1,0 +1,76 @@
+﻿@model QueryVM
+@{
+    <partial name="_ValidationScriptsPartial" />
+}
+<div class="modal-header advanced-search">
+    <h5 class="modal-title text-info">Advanced Search</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+<div class="modal-body">
+    <form id="advanced-search-form"
+          method="get"
+          data-ajax="true"
+          data-ajax-method="get"
+          data-ajax-begin="onFindAdvanced"
+          data-ajax-success="replaceAndReadMore"
+          data-ajax-error="onError"
+          autocomplete="off"
+          asp-action="_IndexPartial"
+          asp-controller="Copy">
+        <div class="pl-3 pr-3">
+            <input asp-for="OwnerId" type="hidden" />
+            <input asp-for="SearchContext" type="hidden" value="advanced" />
+            <input asp-for="CurrentPage" type="hidden" value="0" />
+            <div class="form-group row pl-2 pr-2">
+                <label asp-for="ISBN" class="control-label"></label>
+                <input asp-for="ISBN" class="form-control" onkeydown="submitOnEnter(event);" />
+                <span asp-validation-for="ISBN" class="text-danger"></span>
+            </div>
+            <div class="form-group row pl-2 pr-2">
+                <label asp-for="Title" class="control-label"></label>
+                <div id="autocomplete-title" class="form-control">
+                    <input asp-for="Title" class="autocomplete-input w-100" onkeydown="submitOnEnter(event); autocompMe(event, this); " />
+                </div>
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group row pl-2 pr-2">
+                <label asp-for="Author" class="control-label"></label>
+                <div id="autocomplete-author" class="form-control">
+                    <input asp-for="Author" class="autocomplete-input w-100" onkeydown="submitOnEnter(event); autocompMe(event, this);" />
+                </div>
+                <span asp-validation-for="Author" class="text-danger"></span>
+            </div>
+            <div class="form-group row pl-2 pr-2">
+                <label asp-for="Editor" class="control-label"></label>
+                <div id="autocomplete-editor" class="form-control">
+                    <input asp-for="Editor" class="autocomplete-input w-100" onkeydown="submitOnEnter(event); autocompMe(event, this);" />
+                </div>
+                <span asp-validation-for="Editor" class="text-danger"></span>
+            </div>
+            <div class="form-group row pl-2 pr-2">
+                <label asp-for="Lang" class="control-label"></label>
+                <div id="autocomplete-lang" class="form-control">
+                    <input asp-for="Lang" class="autocomplete-input w-100" onkeydown="submitOnEnter(event); autocompMe(event, this);" />
+                </div>
+                <span asp-validation-for="Lang" class="text-danger"></span>
+            </div>
+            <div class="form-group row pl-2 pr-2">
+                @foreach (var available in Model.Availables)
+                {
+                    <div class="form-check form-check-inline">
+                        <input type="radio" class="radio-repo" asp-for="Available" value="@available" onchange="onRadioAvailableChange();" />
+                        <label class="form-check-label p-1" for="inlineRadio1">@available</label>
+                    </div>
+                }
+            </div>
+            <div class="form-group row pl-2 pr-2">
+                <div class="col">
+                    <input id="submit-advanced-search" class="btn btn-info w-100" type="submit" value="Search" />
+                </div>
+                <div class="col">
+                    <a href="#" class="btn btn-success w-100" data-dismiss="modal"><i class="fas fa-sign-out-alt"></i>Back</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

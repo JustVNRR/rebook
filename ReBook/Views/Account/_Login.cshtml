@@ -1,0 +1,83 @@
+﻿@model LoginVM
+@if (Model is not null && Model.ExternalLogins.Count > 0)
+{
+    <form method="post"
+          asp-action="_ExternalLogin"
+          asp-route-returnUrl="@Model.ReturnUrl"
+          class="w-100">
+        <div class="form-group row pl-3 pr-3">
+
+            @foreach (var provider in Model.ExternalLogins)
+            {
+                <button type="submit"
+                        name="provider"
+                        value="@provider.Name"
+                        title="Login usin your @provider.DisplayName account "
+                        class="btn btn-block btn-outline-info">
+                    Sign In with @provider.DisplayName
+                </button>
+            }
+        </div>
+    </form>
+}
+<form id="loginForm"
+      data-ajax="true"
+      data-ajax-method="post"
+      data-ajax-url="/Account/Login"
+      data-ajax-update="#main-modal-content"
+      data-ajax-success="updateNavBar();"
+      data-ajax-error="onError"
+      autocomplete="off"
+      enctype="multipart/form-data">
+    @*@Html.AntiForgeryToken()*@
+    @if (@Model.Error is not null)
+    {
+        <div class="form-group row pl-2 pr-2">
+            <label asp-for="Error" class=" control-label pl-2 text-danger">@Model.Error</label>
+        </div>
+    }
+    <input asp-for="ReturnUrl" type="hidden" value="@Model.ReturnUrl" />
+    <div class="form-group row pl-3 pr-3">
+        <input asp-for="Email_L" class="form-control" placeholder="Email" value="@Model.Email_L" />
+        <span asp-validation-for="Email_L" class="text-danger"></span>
+    </div>
+    <div class="form-group row pl-3 pr-3 mb-1">
+        <input asp-for="Password_L" class="form-control" placeholder="Password" />
+        <span asp-validation-for="Password_L" class="text-danger"></span>
+    </div>
+    <div class="form-group row pl-3 pr-3 mb-0">
+        <div class="col p-1">
+            <div class="checkbox">
+                <label asp-for="RememberMe">
+                    <input asp-for="RememberMe" />
+                    @Html.DisplayNameFor(m => m.RememberMe)
+                </label>
+            </div>
+        </div>
+        <div class="col p-1">
+            <h6 class="text-info">
+                <a href="#"
+                   data-ajax="true"
+                   data-ajax-method="get"
+                   data-ajax-url="/Account/_ForgotPasswordRequest"
+                   data-ajax-update="#main-modal-content"
+                   data-ajax-error="onError"
+                   class="btn-block text-center">
+                    Forgot password
+                </a>
+            </h6>
+        </div>
+    </div>
+    <div class="form-group row pl-3 pr-3">
+        <div class="col p-1">
+            <input class="btn btn-block btn-info" type="submit" value="Sign In" />
+        </div>
+        <div class="col p-1">
+            <a href="#"
+               class="btn btn-block btn-success"
+               onclick="$('#pills-profile-tab').trigger('click'); return false;">
+                Sign Up
+            </a>
+        </div>
+    </div>
+</form>

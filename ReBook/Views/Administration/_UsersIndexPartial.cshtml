@@ -1,0 +1,51 @@
+﻿@model ReBook.ViewModels.AdministrationVM.UserIndexVM
+@if (Model.Error != null)
+{
+    <div class="class=" text-center text-danger">
+        @Model.Error
+    </div>
+}
+else
+{
+    @foreach (var obj in Model.Users)
+    {
+        <div class="col mb-4">
+            <div class="card text-center border-0" style="min-width:10em;">
+                <a href=""
+                   data-ajax="true"
+                   data-ajax-url="/Administration/_UserDetails/@obj.Id"
+                   data-ajax-method="get"
+                   data-ajax-begin="onBegin"
+                   data-ajax-success="replaceAndCallback"
+                   data-ajax-error="onError"
+                   data-toggle="modal"
+                   data-target="#main-modal">
+                    <img src=@obj.Avatar class="img-thumbnail thumb-user-create m-2" />
+                </a>
+                <div class="card-body p-1">
+                    <h6 class="card-title">
+                        <a href=""
+                           data-ajax="true"
+                           data-ajax-url="/Administration/_UserDetails/@obj.Id"
+                           data-ajax-method="get"
+                           data-ajax-begin="onBegin"
+                           data-ajax-success="replaceAndCallback"
+                           data-ajax-error="onError"
+                           data-toggle="modal"
+                           data-target="#main-modal">
+                            @obj.Pseudo
+                        </a>
+                    </h6>
+                </div>
+            </div>
+        </div>
+    }
+    @if (Model.Users.Count > 0)
+    {
+        <div class="card d-none tricky">
+            <div class="read-more-embed d-none">
+                <partial name="../Administration/_UsersReadMore" model="Model.Query" />
+            </div>
+        </div>
+    }
+}

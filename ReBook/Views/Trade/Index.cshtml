@@ -1,0 +1,84 @@
+﻿@model TradeIndexVM
+@Html.Raw(TempData["msg"])
+
+@if (Model.Trades.Count > 0)
+{
+    <div class="main-search-container sticky-top no-clear">
+        <form data-ajax="true"
+              data-ajax-method="get"
+              data-ajax-begin="onFindSimple"
+              data-ajax-success="replaceAndReadMore"
+              data-ajax-error="onError"
+              autocomplete="off"
+              asp-controller="Trade"
+              asp-action="_IndexPartial"
+              style="width:100%;">
+            <div class="w-100">
+                <div class="input-group">
+                    <div class="input-group pr-2">
+                        <input asp-for="Query.UserId" type="hidden" />
+                        <input asp-for="Query.SearchContext" type="hidden" value="simple" />
+                        <input asp-for="Query.CurrentPage" type="hidden" value="0" />
+                        <select asp-for="Query.StatusVM" asp-items="@(new SelectList(Model.Query.StatusVMs))" onchange="$('#main-search-button').trigger('click');"
+                                class="pl-2 bg-info text-white"
+                                style=" border-radius: 1em 0 0 1em; font-weight: 600; outline: none;">
+                        </select>
+                        <input id="advanced-search-input" asp-for="Query.QuerySearch" type="text" class="form-control main-input-search no-label" placeholder="search for a trade..." />
+                        <div class="input-group-append">
+                            <a id="clear-advanced-search-button"
+                               href=""
+                               data-ajax="true"
+                               data-ajax-url="/Trade/_IndexPartial"
+                               data-ajax-method="get"
+                               data-ajax-begin="onClearAdvancedSearch"
+                               data-ajax-success="replaceAndReadMore"
+                               data-ajax-error="onError"
+                               class="btn btn-outline-danger"
+                               style="display:none; border-radius:0px;">
+                                &nbsp;<i class="fas fa-search-minus" style="color:red"></i> &nbsp;
+                            </a>
+                            <button id="main-search-button" type="submit" class="btn btn-info" style="border-radius: 0 1em 1em 0;">&nbsp;<i class="fas fa-search"></i>&nbsp;</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h6 class="w-100 text-right p-1 pr-4" style="display: block;">
+                <a href=""
+                   data-ajax="true"
+                   data-ajax-url="/Edition/_ISBN?currentController=@Model.Query.CurrentController"
+                   data-ajax-method="get"
+                   data-ajax-begin="onBegin"
+                   data-ajax-success="replaceAndCallback"
+                   data-ajax-error="onError"
+                   data-toggle="modal"
+                   data-target="#main-modal">
+                    <span style="padding-left:0.5em">Trade a book</span>
+                </a>
+            </h6>
+        </form>
+    </div>
+    <div class="container p-3">
+        <br /><br />
+        <div id="containerIndexEditionPartial">
+            <table class="table table-bordered table-striped" style="width:100%">
+                <tbody id="tbody-edition-index">
+                    <partial name="../Trade/_IndexPartial" model="Model" />
+                </tbody>
+            </table>
+        </div>
+
+        @if (Model.Trades.Count == Model.Query.PageSize)
+        {
+            <div id="containerReadMore" class="container p-3">
+                <partial name="../Trade/_ReadMore" model="Model.Query" />
+            </div>
+        }
+    </div>
+    @section Scripts{
+        <script src="~/js/edition.js"></script>
+    }
+}
+else
+{
+    <div class="text-secondary" style="width:100%; height:90vh; display:flex; justify-content:center; align-items:center;"><h1>No Trade Yet.</h1></div>
+}

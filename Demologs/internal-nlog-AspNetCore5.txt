@@ -1,0 +1,9 @@
+2021-06-05 22:48:02.3450 Info Message Template Auto Format enabled
+2021-06-05 22:48:02.3450 Info Loading assembly: NLog.Web.AspNetCore
+2021-06-05 22:48:02.3961 Info Adding target FileTarget(Name=allfile)
+2021-06-05 22:48:02.3961 Info Adding target FileTarget(Name=ownFile-web)
+2021-06-05 22:48:02.4074 Warn Skipping unrecognized property 'tolower=true` for ${level} (NLog.LayoutRenderers.LevelLayoutRenderer)
+2021-06-05 22:48:02.4074 Info Adding target ConsoleTarget(Name=lifetimeConsole)
+2021-06-05 22:48:02.4389 Info Validating config: TargetNames=allfile, lifetimeConsole, ownFile-web, ConfigItems=69, FilePath=C:\Users\Admin stagiaire.DESKTOP-8967908\Desktop\ReBook\ReBook\bin\Debug\net5.0\NLog.config
+2021-06-05 22:48:02.4597 Info Configuration initialized.
+2021-06-05 22:48:02.4597 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.7.9.12899. Product version: 4.7.9+e8712e62842e2d74d60fdf37cf74d743750e5ca2. GlobalAssemblyCache: False

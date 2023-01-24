@@ -1,0 +1,56 @@
+﻿@model CopyIndexVM
+
+@if (Model.Copies != null)
+{
+    @foreach (var obj in Model.Copies)
+    {
+        <div class="col mb-4" id="@obj.Id">
+            <div class="card text-center border-0" style="min-width:10em;">
+                <a href=""
+                   data-ajax="true"
+                   data-ajax-url="/Copy/_Details?id=@obj.Id&&currentController=@Model.Query.CurrentController"
+                   data-ajax-method="get"
+                   data-ajax-begin="onBegin"
+                   data-ajax-success="replaceAndCallback"
+                   data-ajax-error="onError"
+                   data-toggle="modal"
+                   data-target="#main-modal">
+                    @if (obj.Visuals.IndexOf("book-placeholder.jpg") != -1)
+                    {
+                        <img src=@obj.EditionCover class="img-thumbnail thumb-edition-create" />
+                    }
+                    else
+                    {
+                        <img src=@obj.Visuals class="img-thumbnail thumb-edition-create" />
+                    }
+                </a>
+                <div class="card-body p-1">
+                    <h6 class="card-title">
+                        <a href=""
+                           data-ajax="true"
+                           data-ajax-url="/Copy/_Details?id=@obj.Id&&currentController=@Model.Query.CurrentController"
+                           data-ajax-method="get"
+                           data-ajax-begin="onBegin"
+                           data-ajax-success="replaceAndCallback"
+                           data-ajax-error="onError"
+                           data-toggle="modal"
+                           data-target="#main-modal">
+                            @obj.BookTitle
+                        </a>
+                    </h6>
+                </div>
+            </div>
+        </div>
+    }
+    @if (Model.Copies.Count > 0)
+    {
+        <div class="card d-none tricky">
+            <div class="read-more-embed d-none">
+                <partial name="../Copy/_ReadMore" model="Model.Query" />
+            </div>
+        </div>
+    }
+}
+
+
+

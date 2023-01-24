@@ -1,0 +1,49 @@
+﻿@model DeleteCopyVM
+
+@{
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<div class="modal-header">
+    <h5 class="modal-title text-info">@Model.PageTitle</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+<div class="modal-body">
+    <div class="pt-2 pl-3 pr-3">
+
+        @if (@Model.Error != null)
+        {
+            <div class="form-group row pl-2 pr-2">
+                <label asp-for="Error" class=" control-label pl-2 text-danger">@Model.Error</label>
+            </div>
+        }
+
+        <div class="form-group row pl-2 pr-2 mb-4 mt-4">
+            Do you really want to remove this book from your library?
+        </div>
+        <div class="form-group row pl-2 pr-2 mb-0">
+            <div class="col p-1">
+                <form method="Post"
+                      data-ajax="true"
+                      data-ajax-method="Post"
+                      data-ajax-begin="onBegin"
+                      data-ajax-success="replaceAndCallback"
+                      data-ajax-error="onError"
+                      autocomplete="off"
+                      enctype="multipart/form-data"
+                      data-ajax-url="/Copy/_RemovePost">
+                    @Html.AntiForgeryToken()
+                    <input asp-for="CurrentController" type="hidden" />
+                    <input asp-for="CopyId" type="hidden" />
+                    <input class="btn btn-info w-100" type="submit" value="Yes" />
+                </form>
+            </div>
+            <div class="col p-1">
+                <button type="button" class="btn btn-success w-100" data-dismiss="modal"> Cancel</button>
+            </div>
+        </div>
+    </div>
+
+
+
+

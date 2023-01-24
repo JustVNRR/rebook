@@ -1,0 +1,55 @@
+﻿@model ReBook.ViewModels.AccountVM.UserVM
+
+@{
+    <partial name="_ValidationScriptsPartial" />
+
+    var rolesCount = @Model.Roles.Count;
+}
+
+<div class="modal-header">
+    <h5 class="modal-title text-info">@Model.PageTitle</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+<div class="modal-body">
+    <form method="post"
+          data-ajax="true"
+          data-ajax-method="post"
+          data-ajax-url="/Administration/_UserDeletepost/@Model.Id"
+          data-ajax-begin="onBegin"
+          data-ajax-success="replaceAndCallback"
+          data-ajax-error="onError"
+          autocomplete="off"
+          enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <input asp-for="Id" type="hidden" />
+        <div class="pt-2 pl-3 pr-3">
+            <div class="form-group row pl-2 pr-2">
+                <div class="input-group">
+                    <div class="text-center" style="width:100%;">
+                        <img src=@Model.Avatar class="user-details-image" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row pl-2 pr-2">
+                <h5 class="card-title w-100 text-center text-danger">Delete @Model.Pseudo?</h5>
+
+            </div>
+            <div class="form-group row pl-2 pr-2">
+                <div class="col">
+                    <input class="btn btn-danger w-100" type="submit" value="Delete" />
+                </div>
+                <div class="col">
+                    <a href=""
+                       data-ajax="true"
+                       data-ajax-url="/Administration/_UserDetails/@Model.Id"
+                       data-ajax-method="get"
+                       data-ajax-success="replaceAndCallback"
+                       data-ajax-error="onError"
+                       class="btn btn-success w-100">
+                        <i class="fas fa-sign-out-alt"></i> Cancel
+                    </a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

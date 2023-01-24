@@ -1,0 +1,41 @@
+﻿@model Notification
+@inject SignInManager<ApplicationUser> signInManager;
+@inject UserManager<ApplicationUser> userManager
+
+@{
+    var user = await userManager.GetUserAsync(User);
+    bool isFromUser = false;
+    if (Model.FromUserId == user.Id) isFromUser = true;
+}
+
+<div id="@Model.Id" class="p-4 mt-4 mb-4 text-secondary" style="box-shadow: 0px 0px 0.5em black; border-radius: 1em;">
+    @if (isFromUser)
+    {
+        <div class="text-secondary p-3"><span class="font-weight-bold">@Model.ToUserName</span> and you agreed to exchange <span class="font-weight-bold">@Model.FromCopyTitle</span> for <span class="font-weight-bold">@Model.ToCopyTitle</span>.</div>
+        <ul class="pl-3 pr-3 pb-3">
+            <li>Please contact each other at <a href="@Model.ToUserLogin">@Model.ToUserLogin</a></li>
+            <li>Send <span class="font-weight-bold">@Model.FromCopyTitle</span>.</li>
+            <li>Wait for <span class="font-weight-bold">@Model.ToCopyTitle</span> and mark it as such once received.</li>
+        </ul>
+    }
+    else
+    {
+        <div class="text-secondary p-3"><span class="font-weight-bold">@Model.FromUserName</span> and you agreed to exchange <span class="font-weight-bold">@Model.ToCopyTitle</span> for <span class="font-weight-bold">@Model.FromCopyTitle</span>.</div>
+        <ul class="pl-3 pr-3 pb-3">
+            <li>Please contact each other at <a href="@Model.FromUserLogin">@Model.FromUserLogin</a></li>
+            <li>Send <span class="font-weight-bold">@Model.ToCopyTitle</span>.</li>
+            <li>Wait for <span class="font-weight-bold">@Model.FromCopyTitle</span> and mark it as such once received.</li>
+        </ul>
+    }
+    <div class="form-group row pl-2 pr-2">
+        <div class="col">
+            <a href=""
+               data-ajax="true"
+               data-ajax-url="/Notification/_ReadNotification?notificationId=@Model.Id"
+               data-ajax-method="post"
+               data-ajax-success="readNotification(@Model.Id)"
+               data-ajax-error="onError"
+               class="btn btn-success w-100">Ok</a>
+        </div>
+    </div>
+</div>

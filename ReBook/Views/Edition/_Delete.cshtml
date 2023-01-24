@@ -1,0 +1,64 @@
+﻿@model DeleteEditionVM
+
+@{
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<div class="modal-header">
+    <h5 class="modal-title text-info">@Model.PageTitle</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+<div class="modal-body">
+    <form method="post"
+          data-ajax="true"
+          data-ajax-method="post"
+          data-ajax-begin="onBegin"
+          data-ajax-url="Edition/_DeletePost"
+          data-ajax-update="#main-modal-content"
+          data-ajax-success="$('#submit-advanced-search').click()"
+          data-ajax-error="onError"
+          autocomplete="off"
+          enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <input asp-for="Id" type="hidden" />
+        @if (@Model.Error != null)
+        {
+            <div class="form-group row pl-2 pr-2">
+                <label asp-for="Error" class=" control-label pl-2 text-danger">@Model.Error</label>
+            </div>
+        }
+        <div class=" bt-2 pl-3 pr-3">
+            <div class="form-group row pl-2 pr-2">
+                <div class="input-group">
+                    <div class="text-center" style="width:100%;">
+                        <img src=@Model.Cover class="img-thumbnail" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row pl-2 pr-2">
+                <h5 class="card-title w-100 text-center">@Model.Book</h5>
+                <p class="w-100 text-center">@Model.Editor (@Model.ISBN)</p>
+            </div>
+            <div class="form-group row pl-2 pr-2">
+                <div class="col">
+                    <input class="btn btn-danger w-100" type="submit" value="Delete" />
+                </div>
+                <div class="col">
+                    <a href=""
+                       data-ajax="true"
+                       data-ajax-url="/Edition/_Details?&isbn=@Model.ISBN&&repo=local"
+                       data-ajax-method="get"
+                       data-ajax-success="replaceAndCallback"
+                       data-ajax-error="onError"
+                       class="btn btn-success w-100">
+                        <i class="fas fa-sign-out-alt"></i> Cancel
+                    </a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+

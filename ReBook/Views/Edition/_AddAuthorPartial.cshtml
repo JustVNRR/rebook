@@ -1,0 +1,26 @@
+﻿@model EditionVM
+
+@if (Model.Edition != null && Model.Edition.Book != null && Model.Edition.Book.Authors != null)
+{
+    for (int i = 0; i < Model.Edition.Book.Authors.Count; i++)
+    {
+        <input type="hidden" class="author-index" value="@i" />
+        <div class="form-group row pl-2 pr-2 single-author-container">
+            <div class="input-group">
+                <input asp-for="Edition.Book.Authors[i].Id" type="hidden" />
+                <label asp-for="Edition.Book.Authors[i].Name" class="input-group-text"></label>
+                <div id="autocomplete-author" class="form-control">
+                    <input asp-for="Edition.Book.Authors[i].Name" class="autocomplete-input author-name" placeholder="Author" onkeydown="autocompMe(event, this); preventEnter(event);" />
+                </div>
+                <div class="input-group-append remove-author-btn-container">
+                    <button class="btn btn-info w-100" onclick="removeAuthor(this); return false;"><i class="fas fa-minus mx-2"></i></button>
+                </div>
+            </div>
+            <span asp-validation-for="Edition.Book.Authors[i].Name" class="text-danger"></span>
+        </div>
+    }
+}
+
+<div class="form-group row pl-2 pr-2">
+    <button id="add-author" class="btn btn-block btn-info w-100" onclick="addAuthor(this); return false;"><i class="fas fa-plus mx-2"></i><span style="font-family:sans-serif;">  Add Author</span></button>
+</div>

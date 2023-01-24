@@ -1,0 +1,101 @@
+﻿@model ReBook.ViewModels.AdministrationVM.UserIndexVM
+@if (Model.Error != null)
+{
+    <tr>
+        <td class="text-center text-danger">
+            @Model.Error
+        </td>
+    </tr>
+}
+else
+{
+    @foreach (var obj in Model.Users)
+    {
+        <tr>
+            <td class="text-center">
+                <a href=""
+                   data-ajax="true"
+                   data-ajax-url="/Administration/_UserDetails/@obj.Id"
+                   data-ajax-method="get"
+                   data-ajax-begin="onBegin"
+                   data-ajax-success="replaceAndCallback"
+                   data-ajax-error="onError"
+                   data-toggle="modal"
+                   data-target="#main-modal">
+                    <img src=@obj.Avatar class="img-thumbnail thumb-user-create" />
+                </a>
+
+            </td>
+            <td class="text-center">
+                <p>
+                    <a href=""
+                       data-ajax="true"
+                       data-ajax-url="/Administration/_UserDetails/@obj.Id"
+                       data-ajax-method="get"
+                       data-ajax-begin="onBegin"
+                       data-ajax-success="replaceAndCallback"
+                       data-ajax-error="onError"
+                       data-toggle="modal"
+                       data-target="#main-modal">
+                        @obj.Pseudo
+                    </a>
+                </p>
+            </td>
+            <td class="text-center">
+                <p>
+                    <a href="mailto:@obj.Login">@obj.Login</a>
+                </p>
+            </td>
+            <td class="text-center">
+                <div class="btn-group" role="group">
+                    <a href=""
+                       data-ajax="true"
+                       data-ajax-url="/Administration/_UserDetails/@obj.Id"
+                       data-ajax-method="get"
+                       data-ajax-begin="onBegin"
+                       data-ajax-success="replaceAndCallback"
+                       data-ajax-error="onError"
+                       class="btn btn-success"
+                       data-toggle="modal"
+                       data-target="#main-modal">
+                        <i class="fas fa-search"></i>
+                    </a>
+                    <a href=""
+                       data-ajax="true"
+                       data-ajax-url="/Administration/_UserEditGet/@obj.Id"
+                       data-ajax-method="get"
+                       data-ajax-begin="onBegin"
+                       data-ajax-success="replaceAndCallback"
+                       data-ajax-error="onError"
+                       class="btn btn-info"
+                       data-toggle="modal"
+                       data-target="#main-modal">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href=""
+                       data-ajax="true"
+                       data-ajax-url="/Administration/_UserDeleteGet/@obj.Id"
+                       data-ajax-method="get"
+                       data-ajax-begin="onBegin"
+                       data-ajax-success="replaceAndCallback"
+                       data-ajax-error="onError"
+                       class="btn btn-danger"
+                       data-toggle="modal"
+                       data-target="#main-modal">
+                        <i class="far fa-trash-alt"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+    }
+    @if (Model.Users.Count > 0)
+    {
+        <tr class="d-none">
+            <td>
+                <div class="read-more-embed d-none">
+                    <partial name="../Administration/_UsersReadMore" model="Model.Query" />
+                </div>
+            </td>
+        </tr>
+    }
+}

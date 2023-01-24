@@ -1,0 +1,193 @@
+﻿@model CopyVM
+
+@{
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<div class="modal-header">
+    <h5 class="modal-title text-info">@Model.PageTitle</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+<div class="modal-body">
+    <form method="post"
+          data-ajax="true"
+          data-ajax-method="post"
+          data-ajax-begin="onBegin"
+          data-ajax-success="replaceCallbackAndNotif"
+          data-ajax-error="onError"
+          autocomplete="off"
+          enctype="multipart/form-data"
+          asp-action="_CreateOrEditCopyPost"
+          asp-controller="Copy">
+        @Html.AntiForgeryToken()
+        <div class="pt-2 pl-3 pr-3">
+            <input asp-for="CurrentController" type="hidden" />
+            <input asp-for="Copy.OwnerId" type="hidden" />
+            <input asp-for="Copy.EditionId" type="hidden" />
+            <input asp-for="Copy.Edition.ISBN13" type="hidden" />
+            <input asp-for="Copy.Id" type="hidden" />
+            <input asp-for="IsOwnerOf" type="hidden" />
+            @if (@Model.Error != null)
+            {
+                <div class="form-group row pl-2 pr-2">
+                    <label asp-for="Error" class=" control-label pl-2 text-danger">@Model.Error</label>
+                </div>
+            }
+            <div class="edition-details-first">
+                <div>
+                    <img src=@Model.Copy.Edition.Cover class="edition-details-image2 mt-2 mb-2" style="max-height:12em" />
+                </div>
+                <div>
+                    <ul>
+                        <li class="edition-details-about-item">
+                            <div class="edition-details-about-item-name">
+                                <span>Title</span>
+                            </div>
+                            <div class="edition-details-about-item-value">
+                                @Model.Copy.Edition.Book.Title
+                            </div>
+                        </li>
+                        <li class="edition-details-about-item">
+                            <div class="edition-details-about-item-name">
+                                <span>Author(s)</span>
+                            </div>
+                            <div class="edition-details-about-item-value">
+                                @for (var i = 0; i < @Model.Copy.Edition.Book.Authors.Count; i++)
+                                {
+                                    @Model.Copy.Edition.Book.Authors[i].Name<br />
+                                }
+                            </div>
+                        </li>
+                        <li class="edition-details-about-item">
+                            <div class="edition-details-about-item-name">
+                                <span>Editor</span>
+                            </div>
+                            <div class="edition-details-about-item-value">
+                                @Model.Copy.Edition.Editor
+                            </div>
+                        </li>
+                        <li class="edition-details-about-item">
+                            <div class="edition-details-about-item-name">
+                                <span>ISBN</span>
+                            </div>
+                            <div id="Edition_ISBN13" class="edition-details-about-item-value">
+                                @Model.Copy.Edition.ISBN13
+                            </div>
+                        </li>
+
+                        <li class="edition-details-about-item">
+                            <div class="edition-details-about-item-name">
+                                <span>Published Date</span>
+                            </div>
+                            <div class="edition-details-about-item-value">
+                                @Model.Copy.Edition.publishedDate
+                            </div>
+                        </li>
+                        <li class="edition-details-about-item">
+                            <div class="edition-details-about-item-name">
+                                <span>Language</span>
+                            </div>
+                            <div class="edition-details-about-item-value">
+                                @Model.Copy.Edition.Language
+                            </div>
+                        </li>
+                        <li class="edition-details-about-item">
+                            <div class="edition-details-about-item-name">
+                                <span>Page Count</span>
+                            </div>
+                            <div class="edition-details-about-item-value">
+                                @Model.Copy.Edition.pageCount
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="edition-details-first mt-3 mb-3">
+                <div class="mr-2">
+                    <textarea asp-for="Copy.Comments" class="form-control" rows="4" placeholder="Your comments (Optional)" style="min-width:20em;"></textarea>
+                    <span asp-validation-for="Copy.Comments" class="text-danger"></span>
+                </div>
+                <div class="d-none">
+                    <div class="custom-file">
+                        <input id="input-cover" type="file" class="custom-file-input" onchange="uploadCopyVisual(event, this);">
+                        <label asp-for="Copy.Visuals" class="custom-file-label" for="customFile">Add a visual</label>
+                    </div>
+                    <span asp-validation-for="Copy.Visuals" class="text-danger"></span>
+                </div>
+                <div class="text-center" style="position:relative">
+                    <div id="img-loader-container" class="img-thumbnail thumb-edition-create">
+                        <div class="img-loader"></div>
+                    </div>
+                    <img id="form-img-preview" src=@Model.Copy.Visuals class="img-thumbnail thumb-edition-create" onclick="$('#input-cover').trigger('click');" />
+                </div>
+                <input asp-for="Copy.Visuals" type="hidden">
+            </div>
+
+            <div class="form-group row pl-2 pr-2">
+                <div class="col-4 p-0">
+                    <label asp-for="Copy.Condition" class="form-control border-0 pl-0"></label>
+                </div>
+
+                <div class="col p-0">
+                    <select asp-for="Copy.Condition" class="form-control" asp-items="Html.GetEnumSelectList<Condition>()">
+                        <option selected="selected" value="">Condition</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group row pl-2 pr-2">
+
+                <div class="checkbox">
+                    <label asp-for="Copy.Avalaible">
+                        <input asp-for="Copy.Avalaible" />
+                        @Html.DisplayNameFor(m => m.Copy.Avalaible)
+                    </label>
+                </div>
+            </div>
+
+            @if (Model.IsOwnerOf)
+            {
+                <div class="form-group row pl-2 pr-2">
+                    <div class="col">
+                        <input class="btn btn-info w-100" type="submit" value="Save" />
+                    </div>
+                    <div class="col">
+                        <a href=""
+                           data-ajax="true"
+                           data-ajax-url="/Copy/_RemoveGet?copyId=@Model.Copy.Id&&currentController=@Model.CurrentController"
+                           data-ajax-method="get"
+                           data-ajax-success="replaceAndCallback"
+                           data-ajax-error="onError"
+                           class="btn btn-danger w-100">
+                            <i class="fas fa-trash-alt"></i> Remove
+                        </a>
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-success w-100" data-dismiss="modal"> Cancel</button>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="form-group row pl-2 pr-2">
+                    <div class="col">
+                        <input class="btn btn-info w-100" type="submit" value="Add to my Library" />
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-success w-100" data-dismiss="modal"> Cancel</button>
+                    </div>
+                </div>
+            }
+
+        </div>
+
+        <div class="col-4">
+            @* Keep this empty *@
+        </div>
+    </form>
+</div>
+
+
+
+

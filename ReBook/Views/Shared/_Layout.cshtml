@@ -1,0 +1,62 @@
+﻿@*@{
+    var isLoggedIn = Context.Request.Cookies.ContainsKey(".AspNetCore.Identity.Application");
+    }
+    <script>
+    var loggedIn = '@isLoggedIn';
+    </script>*@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+@*    <script src="~/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>*@
+    <script src="~/lib/aspnet/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/autocomplete.js"></script>
+    <title>@ViewData["Title"] - ReBook</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/autocomplete.css" />
+    <link rel="stylesheet" href="~/fontawesome/css/all.css" />
+    <link rel="stylesheet" href="~/open-iconic-master/font/css/open-iconic-bootstrap.css" />
+    <script src="~/js/Main.js"></script>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark mb-3">
+            <div id="main-navbar-container" class="container" style="position:relative;">
+                <partial name="_MainNavBar" model="null" />
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3" style="margin-top:10vh;">
+            @RenderBody()
+            <div class="containerLoader d-none">
+                <partial name="_Loader" model="null" />
+            </div>
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2021 - ReBook - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <div class="modal fade" id="main-modal" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div id="main-modal-content" class="modal-content">
+                <partial name="_Loader" model="null" />
+            </div>
+        </div>
+    </div>
+    <!-- ------------------------ CDN AJAX UNOBSTRUSIVE ---------------------  -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.min.js"></script>
+    <!-- ------------------------ CDN AJAX UNOBSTRUSIVE ---------------------  -->
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>

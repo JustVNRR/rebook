@@ -1,0 +1,64 @@
+﻿@model UserVM
+@{
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<div class="modal-header">
+    <h5 class="modal-title text-info">@Model.Pseudo</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+<div class="modal-body">
+
+    <form method="post" asp-controller="Account" asp-action="Logout">
+        <div class="pt-2 pl-3 pr-3">
+            @Html.AntiForgeryToken()
+            <input asp-for="Id" type="hidden" />
+            <div class="d-none">
+                <div class="custom-file">
+                    <input id="input-avatar" type="file" class="custom-file-input" onchange="uploadAvatar(event, this, '@Model.Id', true);">
+                    <label asp-for="Avatar" class="custom-file-label" for="customFile">Choose Avatar</label>
+                </div>
+                <span asp-validation-for="Avatar" class="text-danger"></span>
+            </div>
+            <div class="form-group row pl-2 pr-2">
+                <div class="input-group">
+                    <div class="text-center w-100" style="position:relative">
+                        <div id="avatar-loader-container" class="img-thumbnail thumb-user-create user-panel">
+                            <div class="img-loader user-panel"></div>
+                        </div>
+                        <img id="form-img-preview" src=@Model.Avatar class="user-details-image" style="cursor:pointer;" onclick="$('#input-avatar').trigger('click');" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row pl-2 pr-2">
+                @*<p class="edition-details-authors-list">
+                        @Model.Email
+                    </p>*@
+                <h6 class="edition-details-authors-list">
+                    <a href="#"
+                       data-ajax="true"
+                       data-ajax-method="Get"
+                       data-ajax-url="/Account/_ChangePasswordGet"
+                       data-ajax-update="#main-modal-content">
+                        Update Password
+                    </a>
+                </h6>
+            </div>
+            <div class="form-group row pl-2 pr-2">
+                <div class="col">
+                    <a href="#"
+                       data-ajax="true"
+                       data-ajax-method="post"
+                       data-ajax-url="/Account/_Logout"
+                       data-ajax-success="window.location.href = '/'"
+                       class="btn btn-info w-100">
+                        Sign Out
+                    </a>
+                </div>
+                <div class="col">
+                    <a href="#" class="btn btn-success w-100" data-dismiss="modal">Close</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

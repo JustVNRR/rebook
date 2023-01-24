@@ -1,0 +1,121 @@
+﻿@model ReBook.ViewModels.AccountVM.UserVM
+
+@{
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<div class="modal-header">
+    <h5 class="modal-title text-info">@Model.PageTitle</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+<div class="modal-body">
+    <form id="form"
+          method="post"
+          data-ajax="true"
+          data-ajax-method="post"
+          data-ajax-begin="onBegin"
+          data-ajax-success="replaceAndCallback"
+          data-ajax-error="onError"
+          autocomplete="off"
+          enctype="multipart/form-data"
+          asp-action="_UserAddOrEditPost"
+          asp-controller="Administration">
+        @Html.AntiForgeryToken()
+        <div class="pt-2 pl-3 pr-3">
+            <input asp-for="Id" type="hidden" />
+            @if (@Model.Error != null)
+            {
+                <div class="form-group row pl-2 pr-2">
+                    <label asp-for="Error" class=" control-label pl-2 text-danger">@Model.Error</label>
+                </div>
+            }
+            <div class="row p-2">
+                <div class="col-9">
+                    <div class="d-none">
+                        <div class="custom-file">
+                            <input id="input-avatar" type="file" class="custom-file-input" onchange="uploadAvatar(event, this, '@Model.Id', false);">
+                            <label asp-for="Avatar" class="custom-file-label" for="customFile">Choose Avatar</label>
+                        </div>
+                        <span asp-validation-for="Avatar" class="text-danger"></span>
+                    </div>
+                    <div class="form-group row">
+                        <input asp-for="Pseudo" class="form-control" placeholder="Pseudo" />
+                        <span asp-validation-for="Pseudo" class="text-danger"></span>
+                    </div>
+                    <div class="form-group row">
+                        <input asp-for="Email" class="form-control" placeholder="Email" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-3 p-0">
+                    <div class="text-center w-100" style="position:relative">
+                        <div id="avatar-loader-container" class="img-thumbnail thumb-user-create">
+                            <div class="img-loader"></div>
+                        </div>
+                        <img id="form-img-preview" src=@Model.Avatar class="img-thumbnail thumb-user-create" onclick="$('#input-avatar').trigger('click');" />
+                    </div>
+                    <input asp-for="Avatar" type="hidden">
+                </div>
+            </div>
+            @if (@Model.Id == null)
+            {
+                <div class="form-group row pl-2 pr-2">
+                    <input asp-for="Password" class="form-control" placeholder="Password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group row pl-2 pr-2">
+                    <input asp-for="ConfirmPassword" class="form-control" placeholder="Confirm password" />
+
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+            }
+            else
+            {
+                <input asp-for="Password" type="hidden" value="FakeThisFunckingMVC5.CORE_de_MERDE" />
+                <input asp-for="ConfirmPassword" type="hidden" value="FakeThisFunckingMVC5.CORE_de_MERDE" />
+            }
+
+            <div id="rolesListContainer">
+                <partial name="_AddRolePartial" , model="Model" />
+            </div>
+
+            <div class="form-group row pl-2 pr-2">
+                <div class="col">
+                    @if (@Model.PageTitle == "New User")
+                    {
+                        <input class="btn btn-info w-100" type="submit" value="Create" />
+                    }
+                    else
+                    {
+                        <input class="btn btn-info w-100" type="submit" value="Save" />
+                    }
+                </div>
+                <div class="col">
+                    @if (@Model.PageTitle == "New User")
+                    {
+                        <a href="#" class="btn btn-success w-100" data-dismiss="modal"><i class="fas fa-sign-out-alt"></i> Cancel</a>
+                    }
+                    else
+                    {
+                        <a href=""
+                           data-ajax="true"
+                           data-ajax-url="/Administration/_UserDetails/@Model.Id"
+                           data-ajax-method="get"
+                           data-ajax-success="replaceAndCallback"
+                           data-ajax-error="onError"
+                           class="btn btn-success w-100">
+                            <i class="fas fa-sign-out-alt"></i> Cancel
+                        </a>
+                    }
+                </div>
+            </div>
+
+            <div class="col-4">
+                @* Keep this empty *@
+            </div>
+    </form>
+</div>
+
+
+
+

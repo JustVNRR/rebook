@@ -1,0 +1,81 @@
+﻿@model ReBook.ViewModels.AccountVM.UserVM
+
+@{
+    <partial name="_ValidationScriptsPartial" />
+
+    var rolesCount = @Model.Roles.Count;
+}
+
+<div class="modal-header">
+    <h5 class="modal-title text-info">@Model.PageTitle</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+<div class="modal-body">
+
+    <form method="get"
+          data-ajax="true"
+          data-ajax-method="get"
+          data-ajax-url="/Administration/_UserEditGet/@Model.Id"
+          data-ajax-success="replaceAndCallback"
+          data-ajax-error="onError"
+          autocomplete="off"
+          enctype="multipart/form-data">
+        <input asp-for="Id" type="hidden" />
+        <div class="pt-2 pl-3 pr-3">
+            <div class="form-group row pl-2 pr-2">
+                <div class="input-group">
+                    <div class="text-center" style="width:100%;">
+                        <img src=@Model.Avatar class="user-details-image" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row pl-2 pr-2">
+                <h5 class="card-title w-100 text-center">@Model.Pseudo</h5>
+                <p class="edition-details-authors-list">
+                    <a href="mailto:@Model.Email">@Model.Email</a>
+                </p>
+                @if (rolesCount > 0)
+                {
+                    <div class="edition-details-tags text-center">
+                        @for (var i = 0; i < rolesCount; i++)
+                        {
+                            <span>
+                                <a href=""
+                                   data-ajax="true"
+                                   data-ajax-begin="onLink('@Model.Roles[i]')"
+                                   data-ajax-url="/Administration/_FindByContextLink?name=@Model.Roles[i]&&context=role"
+                                   data-ajax-method="get"
+                                   data-ajax-success="replaceAndReadMore"
+                                   data-ajax-error="onError">
+                                    @Model.Roles[i]
+                                </a>
+                            </span>
+                            @if (i < rolesCount - 1)
+                            {<span> - </span>}
+                        }
+                    </div>
+                }
+            </div>
+            <div class="form-group row pl-2 pr-2">
+                <div class="col">
+                    <input class="btn btn-info w-100" type="submit" value="Edit" />
+                </div>
+                <div class="col">
+                    <a href=""
+                       data-ajax="true"
+                       data-ajax-url="/Administration/_UserDeleteGet/@Model.Id"
+                       data-ajax-method="get"
+                       data-ajax-begin="onBegin"
+                       data-ajax-success="replaceAndCallback"
+                       data-ajax-error="onError"
+                       class="btn btn-danger w-100">
+                        <i class="fas fa-trash-alt"></i> Delete
+                    </a>
+                </div>
+                <div class="col">
+                    <a href="#" class="btn btn-success w-100" data-dismiss="modal"><i class="fas fa-sign-out-alt"></i>Close</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

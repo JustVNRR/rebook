@@ -1,0 +1,87 @@
+﻿@model List<IdentityRole>
+@{
+    ViewBag.Title = "All Roles";
+}
+
+@{
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<div class="modal-header">
+    <h5 class="modal-title text-info">All Roles</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+<div class="modal-body">
+    <div class="pl-3 pr-3">
+        <form method="post" id="form" autocomplete="off" enctype="multipart/form-data">
+            @if (Model.Any())
+            {
+                for (int i = 0; i < Model.Count; i++)
+                {
+                    <div class="form-group row">
+                        <div class="input-group ">
+                            <input asp-for="@Model[i].Name" class="form-control author-name" placeholder="Role" />
+                            <input type="hidden" asp-for="@Model[i].Id" class="form-control author-name" />
+                            <div class="input-group-append btn-group" role="group">
+                                <a href=""
+                                   data-ajax="true"
+                                   data-ajax-url="/Administration/_EditRoleGet?roleName=@Model[i].Name"
+                                   data-ajax-method="get"
+                                   data-ajax-success="replaceAndCallback"
+                                   data-ajax-error="onError"
+                                   class="btn btn-info pl-4 pr-4">
+                                    <i class="far fa-edit"></i>
+                                </a>
+                                <a href=""
+                                   data-ajax="true"
+                                   data-ajax-url="/Administration/_UsersInRoleGet?roleName=@Model[i].Name"
+                                   data-ajax-method="get"
+                                   data-ajax-success="replaceContent"
+                                   data-ajax-error="onError"
+                                   class="btn btn-success pl-4 pr-4">
+                                    <i class="far fa-user"></i>
+                                </a>
+                                <a href=""
+                                   data-ajax="true"
+                                   data-ajax-url="/Administration/_DeleteRoleGet?roleName=@Model[i].Name"
+                                   data-ajax-method="get"
+                                   data-ajax-success="replaceAndCallback"
+                                   data-ajax-error="onError"
+                                   class="btn btn-danger pl-4 pr-4">
+                                    <i class="far fa-trash-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                if (ViewBag.ErrorMessage != null)
+                {
+                    <span class="text-danger row pb-3">@ViewBag.ErrorMessage</span>
+                }
+            }
+            else
+            {
+                <div class="card">
+                    <div class="card-header">
+                        No Roles Created Yet
+                    </div>
+                </div>
+            }
+        </form>
+        <div class="form-group row">
+            <a href=""
+               data-ajax="true"
+               data-ajax-url="/Administration/_AddRoleGet"
+               data-ajax-method="get"
+               data-ajax-success="replaceAndCallback"
+               data-ajax-error="onError"
+               class="btn btn-block btn-info">
+                <i class="fas fa-plus mx-2"></i>
+                <span style="font-family:sans-serif;">  Add New Role</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+

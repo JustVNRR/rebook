@@ -1,0 +1,135 @@
+﻿@model TradeVM
+
+@{
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<div class="modal-header">
+    <h5 class="modal-title text-info">@Model.PageTitle</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+<div class="modal-body">
+    <form id="form"
+          method="post"
+          data-ajax="true"
+          data-ajax-method="post"
+          data-ajax-begin="onBegin"
+          data-ajax-success="replaceRefreshAndNotif"
+          data-ajax-error="onError"
+          autocomplete="off"
+          enctype="multipart/form-data"
+          asp-action="_UpdatePost"
+          asp-controller="Trade">
+        @Html.AntiForgeryToken()
+        <div class="pt-2 pl-3 pr-3">
+            <input asp-for="TradeId" type="hidden" />
+            @if (@Model.Error != null)
+            {
+                <div class="form-group row pl-2 pr-2">
+                    <label asp-for="Error" class=" control-label pl-2 text-danger">@Model.Error</label>
+                </div>
+            }
+
+            <div class="form-group row pl-2 pr-2">
+                <textarea asp-for="Comment" class="form-control" rows="5" placeholder="Your comment (Optional)"></textarea>
+                <span asp-validation-for="Comment" class="text-danger"></span>
+            </div>
+            <div style="width: 100%; display: flex; justify-content: center;">
+                <fieldset class="rating">
+                    @foreach (var rating in Model.Ratings)
+                    {
+                        int reverse = 6 - @rating;
+                        string test = "star" + (@reverse).ToString();
+                        <input type="radio" id=@test asp-for="Rating" value="@reverse" />
+                        <label class="full" for=@test></label>
+                    }
+                    <input type="radio" class="reset-option" name="rating" value="reset" />
+                </fieldset>
+            </div>
+            <div class="text-center text-secondary">
+                <p>Did you received <span style="font-weight:bold;"> @Model.Book</span> ?</p>
+            </div>
+
+            <div class="form-group row pl-2 pr-2">
+                <div style="width: 100%; display: flex; justify-content: center;">
+                    @foreach (var rec in Model.Receiveds)
+                    {
+                        <div class="form-check form-check-inline">
+                            <input type="radio" class="radio-repo" asp-for="Received" value="@rec" />
+                            @if (rec == true)
+                            {
+                                <label class="form-check-label p-1" for="inlineRadio1">Yes</label>
+                            }
+                            else
+                            {
+                                <label class="form-check-label p-1" for="inlineRadio1">No</label>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="form-group row pl-2 pr-2">
+                <div class="col">
+                    <input class="btn btn-success w-100" type="submit" value=" Commit" />
+                </div>
+                <div class="col">
+                    <a href="#"
+                       data-dismiss="modal"
+                       class="btn btn-info w-100">
+                        <i class="fas fa-sign-out-alt"></i> Cancel
+                    </a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css">
+<style>
+    .rating {
+    }
+
+    .myratings {
+        font-size: 85px;
+        color: green
+    }
+
+    .rating > [id^="star"] {
+        display: none
+    }
+
+    .rating > label:before {
+        margin: 5px;
+        font-size: 2.25em;
+        font-family: FontAwesome;
+        display: inline-block;
+        content: "\f005"
+    }
+
+    .rating > .half:before {
+        content: "\f089";
+        position: absolute
+    }
+
+    .rating > label {
+        color: #ddd;
+        float: right
+    }
+
+    .rating > [id^="star"]:checked ~ label,
+    .rating:not(:checked) > label:hover,
+    .rating:not(:checked) > label:hover ~ label {
+        color: #FFD700
+    }
+
+        .rating > [id^="star"]:checked + label:hover,
+        .rating > [id^="star"]:checked ~ label:hover,
+        .rating > label:hover ~ [id^="star"]:checked ~ label,
+        .rating > [id^="star"]:checked ~ label:hover ~ label {
+            color: #FFED85
+        }
+
+    .reset-option {
+        display: none
+    }
+</style>

@@ -1,0 +1,79 @@
+﻿@model Notification
+@inject SignInManager<ApplicationUser> signInManager;
+@inject UserManager<ApplicationUser> userManager
+
+@{
+    var user = await userManager.GetUserAsync(User);
+    bool isFromUser = false;
+    if (Model.FromUserId == user.Id) isFromUser = true;
+}
+
+<div id="@Model.Id" class="p-4 mt-4 mb-4 text-secondary" style="box-shadow: 0px 0px 0.5em black; border-radius: 1em;">
+    @if (isFromUser)
+    {
+        if (Model.UserReceived)
+        {
+            <div class="text-secondary p-2"><span class="font-weight-bold">@Model.ToUserName</span> has received <span class="font-weight-bold">@Model.FromCopyTitle</span>.</div>
+            if (Model.UserComment != null)
+            {
+                <div class="text-secondary p-2"><span class="font-weight-bold">@Model.ToUserName</span>'s comment : <span class="text-secondary font-italic">@Model.UserComment</span></div>
+            }
+            if (Model.UserRatings != 0f)
+            {
+                <div class="text-secondary p-2"><span class="font-weight-bold">@Model.ToUserName</span>'s rating : <span class="Stars" style="--rating: @Model.UserRatings"></span></div>
+            }
+        }
+        else
+        {
+            <div class="text-secondary p-2"><span class="font-weight-bold">@Model.ToUserName</span> mentioned that (s)he still has not received <span class="font-weight-bold">@Model.FromCopyTitle</span>.</div>
+            if (Model.UserComment != null)
+            {
+                <div class="text-secondary p-2"><span class="font-weight-bold">@Model.ToUserName</span>'s comment : <span class="text-secondary font-italic">@Model.UserComment</span></div>
+            }
+            if (Model.UserRatings != 0f)
+            {
+                <div class="text-secondary p-2"><span class="font-weight-bold">@Model.ToUserName</span>'s rating : <span class="Stars" style="--rating: @Model.UserRatings"></span></div>
+            }
+        }
+    }
+    else
+    {
+        if (Model.UserReceived)
+        {
+            <div class="text-secondary p-2"><span class="font-weight-bold">@Model.FromUserName</span> has received <span class="font-weight-bold">@Model.ToCopyTitle</span>.</div>
+            if (Model.UserComment != null)
+            {
+                <div class="text-secondary p-2"><span class="font-weight-bold">@Model.FromUserName</span>'s comment : <span class="text-secondary font-italic">@Model.UserComment</span></div>
+
+            }
+            if (Model.UserRatings != 0f)
+            {
+                <div class="text-secondary p-2"><span class="font-weight-bold">@Model.FromUserName</span>'s rating : <span class="Stars" style="--rating: @Model.UserRatings"></span></div>
+            }
+        }
+        else
+        {
+            <div class="text-secondary p-2"><span class="font-weight-bold">@Model.FromUserName</span> mentioned that (s)he still has not received <span class="font-weight-bold">@Model.ToCopyTitle</span>.</div>
+            if (Model.UserComment != null)
+            {
+                <div class="text-secondary p-2"><span class="font-weight-bold">@Model.FromUserName</span>'s comment : <span class="text-secondary font-italic">@Model.UserComment</span></div>
+
+            }
+            if (Model.UserRatings != 0f)
+            {
+                <div class="text-secondary p-2"><span class="font-weight-bold">@Model.FromUserName</span>'s rating : <span class="Stars" style="--rating: @Model.UserRatings"></span></div>
+            }
+        }
+    }
+    <div class="form-group row pt-3 pl-2 pr-2">
+        <div class="col">
+            <a href=""
+               data-ajax="true"
+               data-ajax-url="/Notification/_ReadNotification?notificationId=@Model.Id"
+               data-ajax-method="post"
+               data-ajax-success="readNotification(@Model.Id)"
+               data-ajax-error="onError"
+               class="btn btn-success w-100">Ok</a>
+        </div>
+    </div>
+</div>

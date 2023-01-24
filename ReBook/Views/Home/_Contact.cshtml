@@ -1,0 +1,50 @@
+﻿@*@using AspNetCore.ReCaptcha*@
+@model MailRequestVM
+@{
+    <partial name="_ValidationScriptsPartial" />
+}
+@inject SignInManager<ApplicationUser> signInManager;
+@inject UserManager<ApplicationUser> userManager
+
+<div class="modal-header">
+    <h5 class="modal-title text-info">Contact</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+<div class="modal-body">
+    <form method="post"
+          data-ajax="true"
+          data-ajax-method="post"
+          data-ajax-url="/Home/_Contact"
+          data-ajax-begin="onBegin"
+          data-ajax-update="#main-modal-content"
+          data-ajax-error="onError"
+          autocomplete="off"
+          enctype="multipart/form-data">
+        @*@if(!signInManager.IsSignedIn(User))
+            {
+                @Html.ReCaptcha()
+            }*@
+        <div class="form-group row pl-2 pr-2">
+            <input asp-for="FromEmail" class="form-control" rows="10" placeholder="Your Email..." value="@Model.FromEmail" />
+            <span asp-validation-for="FromEmail" class="text-danger"></span>
+        </div>
+        <div class="form-group row pl-2 pr-2">
+            <input asp-for="Subject" class="form-control" rows="10" placeholder="Subject..." />
+            <span asp-validation-for="Subject" class="text-danger"></span>
+        </div>
+        <div class="form-group row pl-2 pr-2">
+            <textarea asp-for="Body" class="form-control" rows="10" placeholder="Your message..."></textarea>
+            <span asp-validation-for="Body" class="text-danger"></span>
+        </div>
+        <div class="pt-2 pl-3 pr-3">
+            <div class="form-group row pl-2 pr-2">
+                <div class="col">
+                    <input class="btn btn-info w-100" type="submit" value="Send" />
+                </div>
+                <div class="col">
+                    <a href="#" class="btn btn-success w-100" data-dismiss="modal">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

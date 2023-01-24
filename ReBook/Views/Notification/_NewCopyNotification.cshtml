@@ -1,0 +1,43 @@
+﻿@model Notification
+
+<div id="@Model.Id">
+    <div class="p-4 mt-4 mb-4" style="box-shadow: 0px 0px 0.5em black; border-radius: 1em;">
+        <h6 class="text-right pb-2" style="font-size:0.5em;">@Model.CreatedDateSt</h6>
+        <div class="text-secondary p-3">
+            <a href=""
+               data-ajax="true"
+               data-ajax-url="/Copy/_UserIndex?userId=@Model.FromUserId&initialCopyId=@Model.FromCopyId"
+               data-ajax-method="get"
+               data-ajax-success="replaceAndCallback"
+               data-ajax-error="onError">@Model.FromUserName</a> just added a new copy of <a href=""
+                                                                                             data-ajax="true"
+                                                                                             data-ajax-url="/Copy/_Details?id=@Model.FromCopyId&&currentController=copies"
+                                                                                             data-ajax-method="get"
+                                                                                             data-ajax-begin="onBegin"
+                                                                                             data-ajax-success="replaceAndCallback"
+                                                                                             data-ajax-error="onError"
+                                                                                             onclick="$('#read-notif').trigger('click');">@Model.FromCopyTitle</a>.
+                                                                                        </div>
+
+
+                                                                                        <div class="form-group row pt-3 pl-2 pr-2">
+                                                                                            <div class="col">
+                                                                                                <a href=""
+                                                                                                   data-ajax="true"
+                                                                                                   data-ajax-url="/Notification/_ReadNotification?notificationId=@Model.Id"
+                                                                                                   data-ajax-method="post"
+                                                                                                   data-ajax-success="readNotification(@Model.Id)"
+                                                                                                   data-ajax-error="onError"
+                                                                                                   class="btn btn-success w-100">Ok</a>
+                                                                                                <a id="read-notif" href=""
+                                                                                                   data-ajax="true"
+                                                                                                   data-ajax-url="/Notification/_ReadNotification?notificationId=@Model.Id"
+                                                                                                   data-ajax-method="post"
+                                                                                                   data-ajax-success="readNotificationWithoutClosingModal(@Model.Id)"
+                                                                                                   data-ajax-error="onError"
+                                                                                                   class="d-none">Ok</a>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+

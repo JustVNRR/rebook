@@ -1,0 +1,28 @@
+﻿@model QueryTradeVM
+<form method="Get"
+      data-ajax="true"
+      data-ajax-method="get"
+      data-ajax-begin="readMoreLoader(this);"
+      data-ajax-success="appendReadMore"
+      data-ajax-error="onError"
+      asp-action="_IndexPartial"
+      asp-controller="Trade">
+    <input id="sStatus" asp-for="Status" type="hidden" />
+    <input id="sFromUserStatus" asp-for="FromStatus" type="hidden" />
+    <input id="sToUserStatus" asp-for="ToStatus" type="hidden" />
+    <input id="sUserId" asp-for="UserId" type="hidden" />
+    <input id="sFromUserId" asp-for="FromUserId" type="hidden" />
+    <input id="sToUserName" asp-for="ToUserName" type="hidden" />
+    <input id="sFromUserName" asp-for="FromUserName" type="hidden" />
+    <input id="sToUserId" asp-for="ToUserId" type="hidden" />
+    <input id="sCurrentPage" asp-for="CurrentPage" type="hidden" />
+    <input id="sPageSize" asp-for="PageSize" type="hidden" />
+    <input id="sFound" asp-for="Found" type="hidden" />
+    <input id="sSearchContext" asp-for="SearchContext" type="hidden" />
+    <input id="sTitle" asp-for="Title" type="hidden" />
+    <input id="sRepo" asp-for="CurrentController" type="hidden" />
+    <input id="sQuerySearch" asp-for="QuerySearch" type="hidden" />
+    <div class=" bt-2 text-center">
+        <button id="read-more-btn" type="submit" class="btn btn-success btn-readmore"><i class="fas fa-plus"></i></button>
+    </div>
+</form>

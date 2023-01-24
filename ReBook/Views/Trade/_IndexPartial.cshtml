@@ -1,0 +1,135 @@
+﻿@model TradeIndexVM
+@inject SignInManager<ApplicationUser> signInManager;
+@inject UserManager<ApplicationUser> userManager
+
+@{
+    var user = await userManager.GetUserAsync(User);
+    bool isFromUser = false;
+    string fromVisual, fromTitle, toVisual, toTitle;
+    string messageStatus = "";
+    string fromStatus = "";
+    string toStatus = "";
+}
+@if (Model.Trades != null && Model.Trades.Count > 0)
+{
+
+    @foreach (var obj in Model.Trades)
+    {
+        if (obj.FromUserID == user.Id)
+        {
+            isFromUser = true;
+            fromVisual = @obj.FromCopyVisual;
+            toVisual = @obj.ToCopyVisual;
+            fromTitle = @obj.FromBookTitle;
+            toTitle = @obj.ToBookTitle;
+            if (obj.Status == TradeStatus.complete)
+            {
+                messageStatus = "Trade completed";
+            }
+            else
+            {
+                if (obj.FromStatus == TradeStatus.complete)
+                {
+                    fromStatus = $"<span style='font-weight:bold'> {obj.ToUserName} </span> received <span style='font-weight:bold'> {obj.FromBookTitle} </span>.";
+                }
+                else
+                {
+                    fromStatus = $"<span style='font-weight:bold'> {obj.ToUserName} </span> is waiting for <span style='font-weight:bold'> {obj.FromBookTitle} </span>.";
+                }
+                if (obj.ToStatus == TradeStatus.complete)
+                {
+                    toStatus = $"You received <span style='font-weight:bold'> {obj.ToBookTitle} </span>.";
+                }
+                else
+                {
+                    toStatus = $"You're waiting for <span style='font-weight:bold'> {obj.ToBookTitle} </span>.";
+                }
+            }
+        }
+        else
+        {
+            isFromUser = false;
+            fromVisual = @obj.ToCopyVisual;
+            toVisual = @obj.FromCopyVisual;
+            fromTitle = @obj.ToBookTitle;
+            toTitle = @obj.FromBookTitle;
+            if (obj.Status == TradeStatus.complete)
+            {
+                messageStatus = "Trade completed";
+            }
+            else
+            {
+                if (obj.ToStatus == TradeStatus.complete)
+                {
+                    fromStatus = $"<span style='font-weight:bold'> {obj.FromUserName} </span> received <span style='font-weight:bold'> {obj.ToBookTitle} </span>.";
+                }
+                else
+                {
+                    fromStatus = $"<span style='font-weight:bold'> {obj.FromUserName} </span> is waiting for <span style='font-weight:bold'> {obj.ToBookTitle} </span>.";
+                }
+                if (obj.FromStatus == TradeStatus.complete)
+                {
+                    toStatus = $"You received <span style='font-weight:bold'> {obj.FromBookTitle} </span>.";
+                }
+                else
+                {
+                    toStatus = $"You're waiting for <span style='font-weight:bold'> {obj.FromBookTitle} </span>.";
+                }
+            }
+        }
+
+        <tr>
+            <td class="text-center">
+                <img src=@fromVisual class="img-thumbnail thumb-edition-create" />
+            </td>
+            <td class="text-center text-secondary">
+                @if (obj.Status == TradeStatus.complete)
+                {
+                    <p>@messageStatus</p>
+                }
+                else
+                {
+                    <ul>
+                        <li>@Html.Raw(fromStatus)</li>
+                        <li>@Html.Raw(toStatus)</li>
+                    </ul>
+                    if ((isFromUser && obj.ToStatus == TradeStatus.pending) || ((!isFromUser && obj.FromStatus == TradeStatus.pending)))
+                    {
+                        <a href=""
+                           data-ajax="true"
+                           data-ajax-url="/Trade/_EditGet/@obj.Id"
+                           data-ajax-method="get"
+                           data-ajax-begin="onBegin"
+                           data-ajax-success="replaceAndCallback"
+                           data-ajax-error="onError"
+                           class="btn btn-success"
+                           data-toggle="modal"
+                           data-target="#main-modal">
+                            <i class="fas fa-edit"></i> Update
+                        </a>
+                    }
+                }
+            </td>
+            <td class="text-center">
+                <img src=@toVisual class="img-thumbnail thumb-edition-create" />
+            </td>
+        </tr>
+    }
+    @if (Model.Trades.Count > 0)
+    {
+        <tr class="d-none">
+            <td>
+                <div class="read-more-embed d-none tricky">
+                    <partial name="../Trade/_ReadMore" model="Model.Query" />
+                </div>
+            </td>
+        </tr>
+    }
+
+}
+
+
+
+
+
+

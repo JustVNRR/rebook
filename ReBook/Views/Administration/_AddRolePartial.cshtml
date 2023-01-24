@@ -1,0 +1,25 @@
+﻿@model ReBook.ViewModels.AccountVM.UserVM
+
+@if (Model.Roles != null)
+{
+    for (int i = 0; i < Model.Roles.Count; i++)
+    {
+        <input type="hidden" class="role-index" value="@i" />
+        <div class="form-group row pl-2 pr-2 single-role-container">
+            <div class="input-group">
+                <label asp-for="Roles[i]" class="input-group-text"></label>
+                <div id="autocomplete-tag" class="form-control">
+                    <input asp-for="Roles[i]" class="autocomplete-input role-name" onkeydown="autocompMe(event, this); preventEnter(event);" />
+                </div>
+                <div class="input-group-append remove-tag-btn-container">
+                    <button class="btn btn-info w-100" onclick="removeRole(this); return false;"><i class="fas fa-minus mx-2"></i></button>
+                </div>
+            </div>
+            <span asp-validation-for="Roles[i]" class="text-danger"></span>
+        </div>
+    }
+}
+
+<div class="form-group row pl-2 pr-2">
+    <button id="add-tag" class="btn btn-block btn-info w-100" onclick="addRole(this); return false;"><i class="fas fa-plus mx-2"></i><span style="font-family:sans-serif;">  Add Role</span></button>
+</div>

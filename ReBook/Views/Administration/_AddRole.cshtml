@@ -1,0 +1,45 @@
+﻿@model ReBook.ViewModels.AdministrationVM.RoleVM
+
+@{
+    <partial name="_ValidationScriptsPartial" />
+}
+<div class="modal-header">
+    <h5 class="modal-title text-info">@Model.PageTitle</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<form id="form"
+      method="post"
+      data-ajax="true"
+      data-ajax-method="post"
+      data-ajax-success="replaceAndCallback"
+      data-ajax-error="onError"
+      autocomplete="off"
+      enctype="multipart/form-data"
+      asp-action="_AddRole"
+      asp-controller="Administration">
+    @Html.AntiForgeryToken()
+    <div class="modal-body">
+        @if (@Model.Error != null)
+        {
+            <div class="form-group row pl-2 pr-2">
+                <label asp-for="Error" class=" control-label pl-2 text-danger">@Model.Error</label>
+            </div>
+        }
+        <input asp-for="Name" class="form-control" type="text" value="" placeholder="new role name" />
+    </div>
+    <div class="modal-footer">
+        <input type="submit" class="btn btn-info" style="min-width:5em;" value="Save" />
+        <a href=""
+           data-ajax="true"
+           data-ajax-url="/Administration/_Roles"
+           data-ajax-method="get"
+           data-ajax-success="replaceAndCallback"
+           data-ajax-error="onError"
+           style="min-width:5em;"
+           class="btn btn-danger">Cancel</a>
+    </div>
+</form>
+
+

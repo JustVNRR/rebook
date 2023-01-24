@@ -1,0 +1,36 @@
+﻿@model ReBook.ViewModels.AdministrationVM.UserRoleVM
+@if (@Model.IsSelected)
+{
+    <tr>
+        <td class="text-center" style="width: 5em!important;">
+            <img src=@Model.Avatar class="img-thumbnail thumb-user-create" style="max-width: 3em; max-height: 3em;" />
+        </td>
+        <td>
+            <div class="form-check m-1">
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="Pseudo" />
+                <input asp-for="IsSelected" class="form-check-input d-none" onchange="updateUserRole(this); return false;" />
+                <label class="form-check-label" asp-for="IsSelected">@Model.Pseudo</label>
+            </div>
+        </td>
+    </tr>
+}
+else
+{
+    <tr>
+        <td class="d-none text-center" style="width: 5em!important;">
+            <img src=@Model.Avatar class="img-thumbnail thumb-user-create" style="max-width: 3em; max-height: 3em;" />
+        </td>
+        <td class="d-none">
+            <div class="form-check m-1">
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="Pseudo" />
+                <input asp-for="IsSelected" class="form-check-input d-none" onchange="updateUserRole(this); return false;" />
+                <label class="form-check-label" asp-for="IsSelected">@Model.Pseudo</label>
+            </div>
+        </td>
+    </tr>
+}
+
+
+

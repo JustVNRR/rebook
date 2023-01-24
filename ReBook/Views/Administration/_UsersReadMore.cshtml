@@ -1,0 +1,21 @@
+﻿@model ReBook.ViewModels.AdministrationVM.QueryUserVM
+<form method="Get"
+      data-ajax="true"
+      data-ajax-method="get"
+      data-ajax-begin="readMoreLoader(this);"
+      data-ajax-success="appendReadMore"
+      data-ajax-error="onError"
+      asp-action="_UsersIndexPartial"
+      asp-controller="Administration">
+    <input id="sCurrentPage" asp-for="CurrentPage" type="hidden" />
+    <input id="sPageSize" asp-for="PageSize" type="hidden" />
+    <input id="sFound" asp-for="Found" type="hidden" />
+    <input id="sSearchContext" asp-for="SearchContext" type="hidden" />
+    <input id="sId" asp-for="Id" type="hidden" />
+    <input id="sLogin" asp-for="Login" type="hidden" />
+    <input id="sPseudo" asp-for="Pseudo" type="hidden" />
+    <input id="sRole" asp-for="Role" type="hidden" />
+    <div class=" bt-2 text-center">
+        <button type="submit" id="read-more-btn" class="btn btn-success btn-readmore"><i class="fas fa-plus"></i></button>
+    </div>
+</form>

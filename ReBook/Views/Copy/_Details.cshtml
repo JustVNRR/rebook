@@ -1,0 +1,196 @@
+﻿@model CopyVM
+
+@{
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<div class="modal-header">
+    <h5 class="modal-title text-info">@Model.PageTitle</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+<div class="modal-body">
+    <div class="pt-2 pl-3 pr-3">
+        <input asp-for="CurrentController" type="hidden" />
+        <input asp-for="Copy.OwnerId" type="hidden" />
+        <input asp-for="Copy.EditionId" type="hidden" />
+        <input asp-for="Copy.Edition" type="hidden" />
+        @if (@Model.Error != null)
+        {
+            <div class="form-group row pl-2 pr-2">
+                <label asp-for="Error" class=" control-label pl-2 text-danger">@Model.Error</label>
+            </div>
+        }
+        <div class="edition-details-first">
+            <div>
+                <img src=@Model.Copy.Edition.Cover class="edition-details-image2 mt-2 mb-2" style="max-height:12em" />
+            </div>
+            <div style="min-width:18em;">
+                <ul style="padding-left:1em">
+                    <li class="edition-details-about-item">
+                        <div class="edition-details-about-item-name">
+                            <span>Title</span>
+                        </div>
+                        <div class="edition-details-about-item-value">
+                            @Model.Copy.Edition.Book.Title
+                        </div>
+                    </li>
+                    <li class="edition-details-about-item">
+                        <div class="edition-details-about-item-name">
+                            <span>Author(s)</span>
+                        </div>
+                        <div class="edition-details-about-item-value">
+                            @for (var i = 0; i < @Model.Copy.Edition.Book.Authors.Count; i++)
+                            {
+                                @Model.Copy.Edition.Book.Authors[i].Name<br />
+                            }
+                        </div>
+                    </li>
+                    <li class="edition-details-about-item">
+                        <div class="edition-details-about-item-name">
+                            <span>Editor</span>
+                        </div>
+                        <div class="edition-details-about-item-value">
+                            @Model.Copy.Edition.Editor
+                        </div>
+                    </li>
+                    <li class="edition-details-about-item">
+                        <div class="edition-details-about-item-name">
+                            <span>ISBN</span>
+                        </div>
+                        <div id="Edition_ISBN13" class="edition-details-about-item-value">
+                            @Model.Copy.Edition.ISBN13
+                        </div>
+                    </li>
+
+                    <li class="edition-details-about-item">
+                        <div class="edition-details-about-item-name">
+                            <span>Published Date</span>
+                        </div>
+                        <div class="edition-details-about-item-value">
+                            @Model.Copy.Edition.publishedDate
+                        </div>
+                    </li>
+                    <li class="edition-details-about-item">
+                        <div class="edition-details-about-item-name">
+                            <span>Language</span>
+                        </div>
+                        <div class="edition-details-about-item-value">
+                            @Model.Copy.Edition.Language
+                        </div>
+                    </li>
+                    <li class="edition-details-about-item">
+                        <div class="edition-details-about-item-name">
+                            <span>Page Count</span>
+                        </div>
+                        <div class="edition-details-about-item-value">
+                            @Model.Copy.Edition.pageCount
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="copy-details-cont">
+            <div>
+                <div class="copy-details-about-item-cont"><div class="copy-details-about-item-name">Condition </div><span>@Model.Copy.Condition</span></div>
+                @if (!Model.IsOwnerOf)
+                {
+                    <div class="copy-details-about-item-cont"><div class="copy-details-about-item-name">Owner </div><span>@Model.Copy.Owner.UserName</span></div>
+                }
+                <div class="copy-details-about-item-cont">
+                    <div class="copy-details-about-item-name">Status </div>
+                    @if (Model.Copy.Avalaible == true)
+                    {
+                        <span>available</span>
+                    }
+                    else
+                    {
+                        <span>not available</span>
+                    }
+                </div>
+            </div>
+            <img src=@Model.Copy.Visuals class="edition-details-image2 mt-2 mb-2" style="max-height:12em" />
+        </div>
+    </div>
+
+    @*@if (Model.Copy.Comments != null)
+        {
+            <div class="m-2">
+                <div class="form-group">
+                    <h6>Owner Comment : </h6>
+                    <div style="max-height:15em; overflow-y:auto;">@Model.Copy.Comments</div>
+                </div>
+            </div>
+        }*@
+
+
+    @if (Model.IsOwnerOf)
+    {
+        @if (Model.Copy.Pretenders.Count > 0)
+        {
+            <div class="m-2">
+                <div class="form-group">
+                    <h6>Prentenders : </h6>
+                    @foreach (var pretender in Model.Copy.Pretenders)
+                    {
+                        <span>
+                            <a href=""
+                               data-ajax="true"
+                               data-ajax-url="/Copy/_UserIndex?userId=@pretender.UserId&initialCopyId=@Model.Copy.Id"
+                               data-ajax-method="get"
+                               data-ajax-success="replaceAndCallback"
+                               data-ajax-error="onError">@pretender.UserName</a>
+                        </span>
+                    }
+                </div>
+            </div>
+        }
+        <div class="form-group row pl-2 pr-2 mb-0">
+            <div class="col p-1">
+                <form method="Post"
+                      data-ajax="true"
+                      data-ajax-method="Post"
+                      data-ajax-begin="onBegin"
+                      data-ajax-success="replaceContent"
+                      data-ajax-error="onError"
+                      autocomplete="off"
+                      enctype="multipart/form-data"
+                      data-ajax-url="/Copy/_EditGet">
+                    @Html.AntiForgeryToken()
+                    <input asp-for="Copy.Id" type="hidden" />
+                    <input asp-for="Copy.OwnerId" type="hidden" />
+                    <input asp-for="CurrentController" type="hidden" />
+                    <input class="btn btn-info w-100" type="submit" value="Edit" />
+                </form>
+            </div>
+            <div class="col p-1">
+                <button type="button" class="btn btn-success w-100" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <form id="form"
+              method="post"
+              data-ajax="true"
+              data-ajax-method="post"
+              data-ajax-begin="onBeginTarget('@Model.Copy.Id')"
+              data-ajax-success="replaceCallbackAndNotif"
+              data-ajax-error="onError"
+              autocomplete="off"
+              enctype="multipart/form-data"
+              data-ajax-url="/Copy/_WishCopyAdd?copyId=@Model.Copy.Id">
+            @Html.AntiForgeryToken()
+            <div id="@Model.Copy.Id" class="form-group pl-3 pr-3 pb-3">
+                <input class="btn btn-success w-100" type="submit" value="Add this copy to my wish list" />
+            </div>
+        </form>
+    }
+    <div class="col-4">
+        @* Keep this empty*@
+    </div>
+</div>
+
+
+
+

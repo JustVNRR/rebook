@@ -1,0 +1,70 @@
+﻿@model ReBook.ViewModels.AdministrationVM.UserIndexVM
+<div class="sticky-top" style="top:5vh;">
+    <div class="row pt-4" style="background:white;">
+        <div class="col-4">
+            <h2 class="text-info">Users</h2>
+        </div>
+        <div class="col-8 text-right">
+            <div id="clear-advanced-search-button" class="btn-group" role="group" style="display:none;">
+                <a href=""
+                   data-ajax="true"
+                   data-ajax-url="/Administration/_UsersIndexPartial"
+                   data-ajax-method="get"
+                   data-ajax-begin="onClearAdvancedSearch"
+                   data-ajax-success="replaceAndReadMore"
+                   data-ajax-error="onError"
+                   class="btn btn-danger">
+                    &nbsp;<i class="far fa-trash-alt"></i> &nbsp;
+                </a>
+                <div class="input-group-append">
+                    <input id="advanced-search-input" type="text" disabled class="form-control" />
+                </div>
+            </div>
+            <div class="btn-group" role="group">
+                <a href=""
+                   class="btn btn-success"
+                   data-toggle="modal"
+                   data-target="#main-modal"
+                   onclick="openAdvancedSearch(); return false;">
+                    <i class="fas fa-search mx-2" style="padding: 0.25em;"></i>
+                </a>
+                <a href=""
+                   data-ajax="true"
+                   data-ajax-url="/Administration/_UserAddGet"
+                   data-ajax-method="get"
+                   data-ajax-begin="onBegin"
+                   data-ajax-success="replaceAndCallback"
+                   data-ajax-error="onError"
+                   class="btn btn-info"
+                   data-toggle="modal"
+                   data-target="#main-modal">
+                    <i class="fas fa-plus"></i> &nbsp; Add New
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container p-3">
+    <br /><br />
+    <div id="containerIndexEditionPartial">
+        <div id="tbody-edition-index" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
+            <partial name="../Administration/_UsersIndexPartial" model="Model" />
+        </div>
+    </div>
+    <div id="containerReadMore" class="container p-3">
+        <partial name="../Administration/_UsersReadMore" model="Model.Query" />
+    </div>
+    <div id="containerSearchEditionForm" class="d-none">
+        <partial name="../Administration/_UsersAdvancedSearch" model="null" />
+    </div>
+</div>
+
+
+@section Scripts{
+
+    <script src="~/js/administration.js"></script>
+}
+
+
+
+

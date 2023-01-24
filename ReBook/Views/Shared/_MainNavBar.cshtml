@@ -1,0 +1,104 @@
+﻿@inject SignInManager<ApplicationUser> signInManager;
+@inject UserManager<ApplicationUser> userManager
+<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ReBook</a>
+<!--<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">-->
+<div class="navbar-collapse collapse justify-content-between">
+    <ul class="navbar-nav flex-grow-1">
+        <li class="nav-item dropdown pl-2 pr-2">
+            <a href=""
+               data-ajax="true"
+               data-ajax-url="/Home/_Contact"
+               data-ajax-method="get"
+               data-ajax-update="#main-modal-content"
+               data-ajax-error="onError"
+               class="nav-link dropdown"
+               data-toggle="modal"
+               data-target="#main-modal"><i class="fa fa-paper-plane" aria-hidden="true"></i>&nbsp;Contact</a>
+        </li>
+        @if (signInManager.IsSignedIn(User) && User.IsInRole("admin"))
+        {
+            <li class="nav-item dropdown pl-2 pr-2">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Manage</a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a href=""
+                   data-ajax="true"
+                   data-ajax-url="/Administration/_Roles"
+                   data-ajax-method="get"
+                   data-ajax-success="replaceAndCallback"
+                   data-ajax-error="onError"
+                   class="dropdown-item"
+                   data-toggle="modal"
+                   data-target="#main-modal">Roles</a>
+                    <a class="dropdown-item" asp-controller="Administration" asp-action="Users">Users</a>
+                    <a class="dropdown-item" asp-controller="Edition" asp-action="Index">Editions</a>
+                </div>
+            </li>
+        }
+        else if (signInManager.IsSignedIn(User))
+        {
+            <li class="nav-item dropdown pl-2 pr-2">
+                <a class="nav-link dropdown" asp-controller="Copy" asp-action="Index"><i class="fa fa-university" aria-hidden="true"></i>&nbsp;My Books</a>
+            </li>
+            <li class="nav-item dropdown pl-2 pr-2">
+                <a class="nav-link dropdown" asp-controller="Wish" asp-action="Index"><i class="fa fa-binoculars" aria-hidden="true"></i>&nbsp;My Wish List</a>
+            </li>
+            <li class="nav-item dropdown pl-2 pr-2">
+                <a class="nav-link dropdown" asp-controller="Trade" asp-action="Index">
+                    <span class="oi oi-transfer"></span>&nbsp;
+                    My Trades
+                </a>
+            </li>
+        }
+    </ul>
+
+</div>
+<div style="display:flex; position:absolute;right:0px;">
+    @if (signInManager.IsSignedIn(User))
+    {
+        var user = await userManager.GetUserAsync(User);
+        var avatar = user.Avatar;
+
+        <a href=""
+       id="notification-count-container"
+       data-ajax="true"
+       data-ajax-url="/Notification/_GetNotifications"
+       data-ajax-method="get"
+       data-ajax-begin="onBegin"
+       data-ajax-success="replaceContent"
+       data-ajax-error="onError"
+       class="nav-link"
+       data-toggle="modal"
+       data-target="#main-modal"><i class="fas fa-bell" style="padding-top:0.5em;"></i><span id="notification-count"></span></a>
+
+        <a href=""
+       data-ajax="true"
+       data-ajax-url="/Account/_UserPanelGet"
+       data-ajax-method="get"
+       data-ajax-begin="onBegin"
+       data-ajax-update="#main-modal-content"
+       data-ajax-error="onError"
+       class="nav-link"
+       data-toggle="modal"
+       data-target="#main-modal"><img src=@avatar class="user-navbar-image" /></a>
+    }
+    else
+    {
+        <a href=""
+       id="login-navbar"
+       data-ajax="true"
+       data-ajax-method="get"
+       data-ajax-url="/Account/_LoginRegisterGet"
+       data-ajax-begin="onBegin"
+       data-ajax-update="#main-modal-content"
+       data-ajax-error="onError"
+       class="nav-link"
+       data-toggle="modal"
+       data-target="#main-modal"
+               ><img src="https://res.cloudinary.com/dngz4sjc2/image/upload/v1624735508/Avatars/anonymous_placeholder_szrplp.jpg" class="user-navbar-image" /></a>
+    }
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+            aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</div>

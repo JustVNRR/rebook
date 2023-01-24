@@ -1,0 +1,46 @@
+﻿@model ISBNVM
+@{
+    <partial name="_ValidationScriptsPartial" />
+}
+<div class="modal-header">
+    <h5 class="modal-title text-info">Fill ISBN</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+<div class="modal-body pb-0">
+    <form method="get"
+          data-ajax="true"
+          data-ajax-method="get"
+          data-ajax-begin="onBegin"
+          data-ajax-success="replaceAndCallback"
+          data-ajax-error="onError"
+          asp-action="_FIND_ISBN"
+          asp-controller="Edition">
+        <div>
+            <input asp-for="CurrentController" type="hidden" />
+            <div class="form-group row">
+                <div class="input-group pl-4 pr-4">
+                    <input asp-for="ISBN" class="form-control" placeholder="ISBN" autocomplete="off" />
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-info w-100"><i class="fas fa-search mx-2"></i></button>
+                    </div>
+                </div>
+                <span asp-validation-for="ISBN" class="text-danger pl-4"></span>
+                <div class="input-group pl-2 pr-2">
+                    <span id="ISBNerror" class="text-danger pl-4"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="input-group">
+                    <div class="text-center" style="width:100%;">
+                        <img src="https://res.cloudinary.com/dngz4sjc2/image/upload/v1626970317/UI/ISBN_jajjen.png" class="img-thumbnail thumb-edition-create" style="border:none;" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row p-2">
+                <div class="col">
+                    <a href="#" class="btn btn-info w-100" data-dismiss="modal"><i class="fas fa-sign-out-alt"></i>Cancel</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,299 @@
+﻿@inject SignInManager<ApplicationUser> signInManager;
+@inject UserManager<ApplicationUser> userManager
+
+@model EditionVM
+
+@{
+    <partial name="_ValidationScriptsPartial" />
+
+    var tagsCount = @Model.Edition.Book.Tags.Count;
+    bool desc = @Model.Edition.Description != null;
+}
+
+<div class="modal-header">
+    <h5 class="modal-title text-info">@Model.PageTitle</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+<div class="modal-body">
+    <input asp-for="Edition.Id" type="hidden" />
+
+    <div class="pt-2 pl-3 pr-3">
+        <div class="edition-details-first">
+            <div>
+                <img src=@Model.Edition.Cover class="edition-details-image2 mt-2 mb-2" style="max-height:12em" />
+            </div>
+            <div>
+                <ul>
+                    <li class="edition-details-about-item">
+                        <div class="edition-details-about-item-name">
+                            <span>Title</span>
+                        </div>
+                        <div class="edition-details-about-item-value">
+                            @Model.Edition.Book.Title
+                        </div>
+                    </li>
+                    <li class="edition-details-about-item">
+                        <div class="edition-details-about-item-name">
+                            <span>Author(s)</span>
+                        </div>
+                        <div class="edition-details-about-item-value">
+                            @for (var i = 0; i < @Model.Edition.Book.Authors.Count; i++)
+                            {
+                                <a href=""
+                                   data-ajax="true"
+                                   data-ajax-begin="onLink('@Model.Edition.Book.Authors[i].Name')"
+                                   data-ajax-url="/Edition/_FindByContextLink?name=@Model.Edition.Book.Authors[i].Name&&repo=@Model.Repository&&context=author"
+                                   data-ajax-method="get"
+                                   data-ajax-success="replaceAndReadMore"
+                                   data-ajax-error="onError">
+                                    @Model.Edition.Book.Authors[i].Name
+                                </a><br />
+                            }
+                        </div>
+                    </li>
+                    <li class="edition-details-about-item">
+                        <div class="edition-details-about-item-name">
+                            <span>Editor</span>
+                        </div>
+                        <div class="edition-details-about-item-value">
+                            <a href=""
+                               data-ajax="true"
+                               data-ajax-begin="onLink('@Model.Edition.Editor')"
+                               data-ajax-url="/Edition/_FindByContextLink?name=@Model.Edition.Editor&&repo=@Model.Repository&&context=editor"
+                               data-ajax-method="get"
+                               data-ajax-success="replaceAndReadMore"
+                               data-ajax-error="onError">
+                                @Model.Edition.Editor
+                            </a>
+                        </div>
+                    </li>
+                    <li class="edition-details-about-item">
+                        <div class="edition-details-about-item-name">
+                            <span>ISBN</span>
+                        </div>
+                        <div class="edition-details-about-item-value">
+                            @Model.Edition.ISBN13
+                        </div>
+                    </li>
+
+                    <li class="edition-details-about-item">
+                        <div class="edition-details-about-item-name">
+                            <span>Published Date</span>
+                        </div>
+                        <div class="edition-details-about-item-value">
+                            @Model.Edition.publishedDate
+                        </div>
+                    </li>
+                    <li class="edition-details-about-item">
+                        <div class="edition-details-about-item-name">
+                            <span>Language</span>
+                        </div>
+                        <div class="edition-details-about-item-value">
+                            @Model.Edition.Language
+                        </div>
+                    </li>
+                    <li class="edition-details-about-item">
+                        <div class="edition-details-about-item-name">
+                            <span>Page Count</span>
+                        </div>
+                        <div class="edition-details-about-item-value">
+                            @Model.Edition.pageCount
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        @if (desc)
+        {
+            <div class="form-group pl-2 pr-2">
+                <h2 class="primary-title">Synopsis</h2>
+                <div style="max-height:15em; overflow-y:auto;">@Model.Edition.Description</div>
+            </div>
+        }
+        @if (tagsCount > 0)
+        {
+            <div class="form-group row pl-2 pr-2">
+                <h2 class="primary-title">Tags</h2>
+                <div class="edition-details-tags">
+                    @for (var i = 0; i < tagsCount; i++)
+                    {
+                        <span>
+                            <a href=""
+                               data-ajax="true"
+                               data-ajax-begin="onLink('@Model.Edition.Book.Tags[i].Name')"
+                               data-ajax-url="/Edition/_FindByContextLink?name=@Model.Edition.Book.Tags[i].Name&&repo=@Model.Repository&&context=tag"
+                               data-ajax-method="get"
+                               data-ajax-success="replaceAndReadMore"
+                               data-ajax-error="onError">
+                                @Model.Edition.Book.Tags[i].Name
+                            </a>
+                        </span>
+                        @if (i < tagsCount - 1)
+                        {<span> - </span>}
+                    }
+                </div>
+            </div>
+        }
+
+        @if (signInManager.IsSignedIn(User) && User.IsInRole("admin"))
+        {
+            <div class="form-group row pl-2 pr-2">
+                <div class="col p-1">
+                    <a href=""
+                       data-ajax="true"
+                       data-ajax-url="/Edition/_EditGet/@Model.Edition.Id"
+                       data-ajax-method="get"
+                       data-ajax-success="replaceAndCallback"
+                       data-ajax-error="onError"
+                       class="btn btn-info w-100">Edit</a>
+                </div>
+                <div class="col p-1">
+                    <a href=""
+                       data-ajax="true"
+                       data-ajax-url="/Edition/_DeleteGet/@Model.Edition.Id"
+                       data-ajax-method="get"
+                       data-ajax-success="replaceAndCallback"
+                       data-ajax-error="onError"
+                       class="btn btn-danger w-100">
+                        <i class="fas fa-trash-alt"></i> Delete
+                    </a>
+                </div>
+                <div class="col p-1">
+                    <a href="#" class="btn btn-success w-100" data-dismiss="modal"><i class="fas fa-sign-out-alt"></i> Close</a>
+                </div>
+            </div>
+        }
+        else if (Model.IsUserLookingFor)
+        {
+            <form id="form"
+                  method="post"
+                  data-ajax="true"
+                  data-ajax-method="post"
+                  data-ajax-begin="onBegin"
+                  data-ajax-success="replaceAndCallback"
+                  data-ajax-error="onError"
+                  autocomplete="off"
+                  enctype="multipart/form-data"
+                  data-ajax-url="/Edition/_WishDelete">
+                @Html.AntiForgeryToken()
+                <input asp-for="Edition.Id" type="hidden" />
+                <input asp-for="Edition.ISBN13" type="hidden" />
+                <input asp-for="CurrentController" type="hidden" />
+                <div class="form-group row pl-2 pr-2">
+                    <input class="btn btn-success w-100" type="submit" value="I'm not looking for this book anymore" />
+                </div>
+            </form>
+            @if (Model.AvailableCopies > 0)
+            {
+                string message;
+
+                @if (Model.AvailableCopies > 1)
+                {
+                    message = @Model.AvailableCopies + " copies available.";
+                }
+                else
+                {
+                    message = "One copie available.";
+                }
+                <div class="form-group row pl-2 pr-2">
+                    <div id="container-available-copies" class="w-100 text-center">
+                        <a href=""
+                           data-ajax="true"
+                           data-ajax-url="/Copy/_GetAvailableCopies?editionId=@Model.Edition.Id"
+                           data-ajax-method="get"
+                           data-ajax-success="replaceAndCallback"
+                           data-ajax-error="onError">
+                            @message
+                        </a>
+                    </div>
+                </div>
+            }
+        }
+        else if (Model.IsUserOwnerOf)
+        {
+            <form id="form"
+                  method="post"
+                  data-ajax="true"
+                  data-ajax-method="post"
+                  data-ajax-begin="onBegin"
+                  data-ajax-success="replaceAndCallback"
+                  data-ajax-error="onError"
+                  autocomplete="off"
+                  enctype="multipart/form-data"
+                  data-ajax-url="/Copy/_RemoveByEditionId">
+                @Html.AntiForgeryToken()
+                <input asp-for="Edition.Id" type="hidden" />
+                <input asp-for="Edition.ISBN13" type="hidden" />
+                <input asp-for="CurrentController" type="hidden" />
+                <div class="form-group row pl-2 pr-2">
+                    <input class="btn btn-success w-100" type="submit" value="Remove from my Library" />
+                </div>
+            </form>
+        }
+        else
+        {
+            <form method="post"
+                  data-ajax="true"
+                  data-ajax-method="post"
+                  data-ajax-begin="onBegin"
+                  data-ajax-success="replaceAndCallback"
+                  data-ajax-error="onError"
+                  autocomplete="off"
+                  enctype="multipart/form-data"
+                  data-ajax-url="/Edition/_AddCopyGet">
+                @Html.AntiForgeryToken()
+                <input asp-for="Edition.Id" type="hidden" />
+                <input asp-for="Edition.ISBN13" type="hidden" />
+                <input asp-for="CurrentController" type="hidden" />
+                <div class="form-group row pl-2 pr-2">
+                    <input class="btn btn-info w-100" type="submit" value="I own this book" />
+                </div>
+            </form>
+
+            <form id="form"
+                  method="post"
+                  data-ajax="true"
+                  data-ajax-method="post"
+                  data-ajax-begin="onBegin"
+                  data-ajax-success="replaceAndCallback"
+                  data-ajax-error="onError"
+                  autocomplete="off"
+                  enctype="multipart/form-data"
+                  data-ajax-url="/Edition/_WishAdd">
+                @Html.AntiForgeryToken()
+                <input asp-for="Edition.Id" type="hidden" />
+                <input asp-for="Edition.ISBN13" type="hidden" />
+                <input asp-for="CurrentController" type="hidden" />
+                <div class="form-group row pl-2 pr-2">
+                    <input class="btn btn-success w-100" type="submit" value="I'm looking for this book" />
+                </div>
+            </form>
+
+            @if (Model.AvailableCopies > 0)
+            {
+                string message;
+
+                @if (Model.AvailableCopies > 1)
+                {
+                    message = @Model.AvailableCopies + " copies available.";
+                }
+                else
+                {
+                    message = "One copie available.";
+                }
+                <div class="form-group row pl-2 pr-2">
+                    <div id="container-available-copies" class="w-100 text-center">
+                        <a href=""
+                           data-ajax="true"
+                           data-ajax-url="/Copy/_GetAvailableCopies?editionId=@Model.Edition.Id"
+                           data-ajax-method="get"
+                           data-ajax-success="replaceAndCallback"
+                           data-ajax-error="onError">
+                            @message
+                        </a>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

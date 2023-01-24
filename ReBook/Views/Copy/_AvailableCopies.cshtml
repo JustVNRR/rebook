@@ -1,0 +1,57 @@
+﻿@model AvailableCopiesVM
+
+@{
+    <partial name="_ValidationScriptsPartial" />
+}
+
+@foreach (var copy in Model.Copies)
+{
+    <div class="w-100" style="box-shadow: 0 0 0.3em rgba(0 0 0 / 50%); border-radius: 0.5em">
+        <div class="copy-details-cont">
+            <div>
+                <div class="copy-details-about-item-cont"><div class="copy-details-about-item-name">Condition </div><span>@copy.Condition</span></div>
+                <div class="copy-details-about-item-cont"><div class="copy-details-about-item-name">Owner </div><span>@copy.Owner.UserName</span></div>
+                <div class="copy-details-about-item-cont">
+                    <div class="copy-details-about-item-name">Owner's credit </div><span class="Stars" style="--rating: @copy.Owner.Rating.ToString(" 0.0").Replace(",",".");"></span>
+                </div>
+            </div>
+            <img src=@copy.Visuals class="edition-details-image2 mt-2 mb-2" style="max-height:12em" />
+        </div>
+        @if (!copy.isUserPretender)
+        {
+            <form id="form"
+                  method="post"
+                  data-ajax="true"
+                  data-ajax-method="post"
+                  data-ajax-begin="onBeginTarget('@copy.CopyId')"
+                  data-ajax-success="replaceCallbackAndNotif"
+                  data-ajax-error="onError"
+                  autocomplete="off"
+                  enctype="multipart/form-data"
+                  data-ajax-url="/Copy/_WishCopyAdd?copyId=@copy.CopyId">
+                @Html.AntiForgeryToken()
+                <div id="@copy.CopyId" class="form-group pl-3 pr-3 pb-3">
+                    <input class="btn btn-success w-100" type="submit" value="Add this copy to my wish list" />
+                </div>
+            </form>
+        }
+        else
+        {
+            <form id="form"
+                  method="post"
+                  data-ajax="true"
+                  data-ajax-method="post"
+                  data-ajax-begin="onBeginTarget('@copy.CopyId')"
+                  data-ajax-success="replaceAndCallback"
+                  data-ajax-error="onError"
+                  autocomplete="off"
+                  enctype="multipart/form-data"
+                  data-ajax-url="/Copy/_WishCopyRemove?copyId=@copy.CopyId">
+                @Html.AntiForgeryToken()
+                <div id="@copy.CopyId" class="form-group pl-3 pr-3 pb-3">
+                    <input class="btn btn-danger w-100" type="submit" value="Remove this copy from my wish list" />
+                </div>
+            </form>
+        }
+    </div>
+}

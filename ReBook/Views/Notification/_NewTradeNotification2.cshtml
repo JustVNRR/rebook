@@ -1,0 +1,77 @@
+﻿
+@inject SignInManager<ApplicationUser> signInManager;
+@inject UserManager<ApplicationUser> userManager
+
+@model Notification
+
+@{
+    var user = await userManager.GetUserAsync(User);
+    bool isFromUser = false;
+    if (Model.FromUserId == user.Id) isFromUser = true;
+}
+
+<div id="@Model.Id" class="p-4 mt-4 mb-4 text-secondary" style="box-shadow: 0px 0px 0.5em black; border-radius: 1em;">
+
+    <form id="form"
+          method="post"
+          data-ajax="true"
+          data-ajax-method="post"
+          data-ajax-begin="onBegin"
+          data-ajax-success="onNotif"
+          data-ajax-error="onError"
+          autocomplete="off"
+          enctype="multipart/form-data"
+          asp-action="_SendAddress"
+          asp-controller="Notification">
+        @Html.AntiForgeryToken()
+        <div class="pt-2 pl-3 pr-3">
+
+            @if (isFromUser)
+            {
+                <div class="text-secondary p-3"><span class="font-weight-bold">@Model.ToUserName</span> and you agreed to exchange <span class="font-weight-bold">@Model.FromCopyTitle</span> for <span class="font-weight-bold">@Model.ToCopyTitle</span>.</div>
+                <ul class="pl-3 pr-3 pb-3">
+                    <li>Please send your address to <span class="font-weight-bold">@Model.ToUserName</span></li>
+                    <li>Send <span class="font-weight-bold">@Model.FromCopyTitle</span> once you reveived <span class="font-weight-bold">@Model.ToUserName</span>'s address.</li>
+                    <li>Wait for <span class="font-weight-bold">@Model.ToCopyTitle</span> and mark it as such once received.</li>
+                </ul>
+
+
+                <div class="form-group row pl-3 pr-3">
+                    <textarea asp-for="FromUserAddress" class="form-control" rows="5" placeholder="Your address">@Model.FromUserAddress</textarea>
+                    <span asp-validation-for="FromUserAddress" class="text-danger"></span>
+                </div>
+            }
+            else
+            {
+                <div class="text-secondary p-3"><span class="font-weight-bold">@Model.FromUserName</span> and you agreed to exchange <span class="font-weight-bold">@Model.ToCopyTitle</span> for <span class="font-weight-bold">@Model.FromCopyTitle</span>.</div>
+                <ul class="pl-3 pr-3 pb-3">
+                    <li>Please send your address to <span class="font-weight-bold">@Model.FromUserName</span></li>
+                    <li>Send <span class="font-weight-bold">@Model.ToCopyTitle</span> once you reveived <span class="font-weight-bold">@Model.FromUserName</span>'s address.</li>
+                    <li>Wait for <span class="font-weight-bold">@Model.ToCopyTitle</span> and mark it as such once received.</li>
+                </ul>
+                <div class="form-group row pl-3 pr-3">
+                    <textarea asp-for="ToUserAddress" class="form-control" rows="5" placeholder="Your address">@Model.ToUserAddress</textarea>
+                    <span asp-validation-for="ToUserAddress" class="text-danger"></span>
+                </div>
+            }
+            <div class="form-group row pl-3 pr-3">
+                <div class="col">
+                    <input class="btn btn-success w-100" type="submit" value="Send" />
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+    @*    <div class="form-group row pl-2 pr-2">
+            <div class="col">
+                <a href=""
+                   data-ajax="true"
+                   data-ajax-url="/Notification/_ReadNotification?notificationId=@Model.Id"
+                   data-ajax-method="post"
+                   data-ajax-success="readNotification(@Model.Id)"
+                   data-ajax-error="onError"
+                   class="btn btn-success w-100">Ok</a>
+            </div>
+        </div>*@
+</div>
